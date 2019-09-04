@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include "departamento.h"
 #include "general.h"
+#include "funcionario.h"
 
 int cadastroDepartamento(FILE *ff,FILE *fd){
     TDepartamento td;
-    int opcao;
 
     do{
         limpaTela();
 
-        td.id = geraID(verificaID(f,2));
+        td.id = geraID(verificaUltimoID(fd,2));
 
         setbuf(stdin,NULL);
         printf("* Forneça o nome do departamento:\n");
@@ -21,15 +21,16 @@ int cadastroDepartamento(FILE *ff,FILE *fd){
 
         setbuf(stdin,NULL);
         printf("\nForneça um Ramal:\n");
-        scanf("%d",&td.Ramal);
+        scanf("%hu",&td.Ramal);
+
 
         printf("\nForneça o ID de um funcionário para designá-lo como gerente deste departamento:\n");
-        scanf("%d",&td.id_gerente);
-        if(td.id_gerente <= 0 || buscaIdFunc(fd) == 0){
+        scanf("%li",&td.id_gerente);
+        if(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0){
             do{
                 printf("\nID inválido forneça um correto:");
-                scanf("%d",&td.id_gerente);
-            }while(td.id_gerente <= 0 || buscaIdFunc(fd) == 0);
+                scanf("%li",&td.id_gerente);
+            }while(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0);
         }
 
         salvaDadosDep(td,fd);
@@ -56,12 +57,12 @@ int relatorioFuncionario(FILE *ff,FILE *fd){
         limpaTela();
 
         printf("\nForneça o ID de um departamento:\n");
-        scanf("%d",&id);
+        scanf("%li",&id);
 
         if(buscaId(fd,2,id) == 0){
             do{
                 printf("\nID inexistente ou inválido. Forneça um novo ID:\n");
-                scanf("%d",&id);
+                scanf("%li",&id);
             }while(buscaId(fd,2,id) == 0);
         }
 
@@ -70,7 +71,7 @@ int relatorioFuncionario(FILE *ff,FILE *fd){
                 break;
         }
 
-        printf("\nCódigo do Departamento: %d\nNome: %s\n",td.id,td.nome);
+        printf("\nCódigo do Departamento: %li\nNome: %s\n",td.id,td.nome);
         printf("Matrícula\tNome\tSalario\n");
         while(fread(&tf,sizeof(tf),1,ff) == 1){
             if(tf.id_depatamento == id){
@@ -78,14 +79,44 @@ int relatorioFuncionario(FILE *ff,FILE *fd){
                 soma += tf.salario;
             }
         }
-        printf("\nTotal da folha de pagamento: %f",&soma);
+        printf("\nTotal da folha de pagamento: %f",soma);
     }while(coletaOpcao() == 1);
 
     return 1;
 }
 
 int dadosDosGerentes(FILE *ff,FILE *fd){
+    TFuncionario tf;
+    long id;
 
+    fseek(ff,0,SEEK_SET);
+    fseek(fd,0,SEEK_SET);
+
+    do{
+        if(arquivoVazio(fd) == 0){
+            printf("Não há departamentos cadastrados no momento.");
+            return 0;
+        }
+
+        limpaTela();
+        printf("Forneça o ID de um departamento:\n");
+        scanf("%li",&id);
+
+        if(buscaId(fd,2,id) == 0){
+            do{
+                printf("\nID inexistente ou inválido. Forneça um novo ID:\n");
+                scanf("%li",&id);
+            }while(buscaId(fd,2,id) == 0);
+        }
+
+        while(fread(&tf,sizeof(tf),1,ff) == 1){
+            if(tf.id_depatamento == id){
+                printf("\n\nNome: %s\tCPF: %s\tID: %li\tMatrícula: %s\nSalário: %f\tEmail: %s",
+                tf.nome,tf.CPF,tf.id,tf.matricula,tf.salario,tf.email);
+            }
+        }
+
+    }while(coletaOpcao() == 1);
 
     return 1;
 }
@@ -94,8 +125,7 @@ long buscaId(FILE *f, int modo,long id){
     TFuncionario tf;
     TDepartamento td;
 
-    fseek(ff,0,SEEK_SET);
-    fseek(fd,0,SEEK_SET);
+    fseek(f,0,SEEK_SET);
 
     if(modo == 1){
         while(fread(&tf,sizeof(tf),1,f) == 1){
@@ -104,10 +134,16 @@ long buscaId(FILE *f, int modo,long id){
         }
         return 0;
     }
-    else
+    else{
         while(fread(&td,sizeof(td),1,f) == 1){
             if(td.id == id)
                 return 1;
         }
         return 0;
+    }
+}
+
+void salvaDadosDep(TDepartamento td, FILE *fd){
+    fseek(fd,0,SEEK_END);
+    fwrite(&td,sizeof(td),1,fd);
 }

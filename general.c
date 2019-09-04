@@ -34,9 +34,8 @@ int pesquisaMat(char mat[], FILE *arq){
     while(fread(&tf,sizeof(tf),1,arq) == 1){
         if(strcmp(tf.matricula,mat) == 1)
             return 1;
-        else
-            return 0;
         }
+    return 0;
 }
 
 ///Gera um valor de ID automaticamente para departamento e funcionário.
@@ -57,12 +56,13 @@ long verificaUltimoID(FILE *f,int m/*usado para indicar qual arquivo em que será
         fread(&tf,sizeof(tf),1,f);
         return tf.id;
     }
-    else
+    else{
         if(sizeof(f) == 0)
             return 0;
         fseek(f,-sizeof(td),SEEK_END);
         fread(&td,sizeof(td),1,f);
         return tf.id;
+    }
 }
 
 //Verificar se essa função funciona depois.
@@ -85,9 +85,8 @@ int validaData(char data[]){
             return 0;
         if(ano > 2019)
             return 0;
-
-        return 1;
     }
+    return 1;
 }
 
 int validaCPF(char cpf[]){
@@ -124,11 +123,6 @@ int validaCPF(char cpf[]){
         }
     }
     return 1;
-}
-
-void salvaDadosFunc(TFuncionario tf, FILE *f){
-    fseek(f,0,SEEK_END);
-    fwrite(&tf,sizeof(tf),1,f);
 }
 
 int coletaOpcao(){

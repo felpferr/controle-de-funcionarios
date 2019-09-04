@@ -2,12 +2,14 @@
 #include <string.h>
 #include "funcionario.h"
 #include "departamento.h"
+#include "historicos.h"
 #include "general.h"
 
 ///Fazer depois uma função para printar na tela uma mensagem de erro.
 
-int cadastroFuncionario(FILE *f){
+int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
     TFuncionario tf;
+    HistoricoFuncionario hf;
     geral g;
     int opcao;
 
@@ -26,7 +28,8 @@ int cadastroFuncionario(FILE *f){
             fgets(tf.nome,60,stdin);
         }while(strlen(tf.nome) == 0);
 
-        tf.id = geraID(verificaID(f,1));
+        tf.id = geraID(verificaUltimoID(f,1));
+        hf.id_funcionario = tf.id;
 
         do{
             setbuf(stdin,NULL);
@@ -44,13 +47,22 @@ int cadastroFuncionario(FILE *f){
             sprintf(tf.dataNascimento,"%s/%s/%s",g.dia,g.mes,g.ano);
         }while(validaData(tf.dataNascimento)==0);
 
+        sprintf(hf.data,"%s/%s/%s",g.dia,g.mes,g.ano);
+
         do{
             setbuf(stdin,NULL);
             printf("* Forneça o CPF:\n");
             fgets(tf.CPF,12,stdin);
         }while(validaCPF(tf.CPF) == 0);
 
-        ///tf.id_depatamento = geraID(verificaID(g,2));
+        if(arquivoVazio(fd) == 0){
+            continue;
+        }
+        else{
+            printf("\nForneça o ID de um departamento para adicionar este funcionário ao departamento:\n");
+            scanf("%li",&tf.id_depatamento);
+
+        }
 
         do{
             setbuf(stdin,NULL);
@@ -96,7 +108,7 @@ int cadastroFuncionario(FILE *f){
         printf("\nForneça um email:\n");
         fgets(tf.email,40,stdin);
 
-        salvaDadosFunc(tf,g);
+        salvaDadosFunc(f,tf);
         opcao = coletaOpcao();
     }while(opcao == 1);
 
@@ -114,13 +126,26 @@ int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
         if(strcmp(mat,tf.matricula) == 1){
             while(fread(&td,sizeof(td),1,fd) == 1)
                 if(tf.id_depatamento == td.id)
-                    printf("%s",&td.nome);
-            printf("\nNome: %s\nMatrícula: %s\nID: %d\nData de Nascimento: %s\nCPF: %s\nID Departamento: %d\
-                   \nSalário: %f\nRua: %s\nBairro: %s\nNúmero: %d\nComplemento: %s\nCidade: %s\nUF: %s\nCEP: %s\nEMAIL: %s",tf.nome,
-                   tf.matricula,tf.id,tf.dataNascimento,tf.CPF,td.id,tf.salario,tf.rua,tf.bairro,tf.Numero,tf.complemento,tf.cidade,
+                    printf("%s",td.nome);
+            printf("\nNome: %s\nMatrícula: %s\nID: %li\nData de Nascimento: %s\nCPF: %s\nID Departamento: %li\
+                   \nSalário: %f\nRua: %s\nBairro: %s\nNúmero: %d\nComplemento: %s\nCidade: %s\nUF: %s\nCEP: %s\nEMAIL: %s",tf.nome,tf.matricula,tf.id,tf.dataNascimento,tf.CPF,td.id,tf.salario,tf.rua,tf.bairro,tf.Numero,tf.complemento,tf.cidade,
                    tf.UF,tf.CEP,tf.email);
             break;
         }
     }
+
+    return 1;
 }
 
+void salvaDadosFunc(FILE *f, TFuncionario tf){
+    fseek(f,0,SEEK_END);
+    fwrite(&tf,sizeof(tf),1,f);
+}
+
+char coletaMatricula(){
+    char mat[10];
+
+    printf("\nForneça um número de matrícula:\n");
+    fgets(mat,10,stdin);
+    return mat;
+}

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "general.h"
 #include "telas.h"
 #include "funcionario.h"
@@ -6,7 +7,7 @@
 
 void inicio(){
     unsigned short int opcao;
-    geral g;
+    FILE *ff,*fd,*fhf,*fhs,*fhd;
     HistoricoDepartamento hd;
     HistoricoFuncionario hf;
     HistoricoSalario hs;
@@ -15,23 +16,29 @@ void inicio(){
 
     setlocale(LC_ALL,"Portuguese");
 
+    ff = fopen("funcionario.dat","wr");
+    fd = fopen("departamento.dat","wr");
+    fhf = fopen("historicoFuncionario.dat","wr");
+    fhs = fopen("historicoSalario.dat","wr");
+    fhd = fopen("historicoDepartamento.dat","wr");
+
     printf("\t\t\t\tBem Vindo\n");
 
     do{
         printf("Escolha uma das opções abaixo:1-Cadastro.\n2-Alteração.\n3-Consultas.\n4-Sair.");
         scanf("%d",&opcao);
 
-        switch{
+        switch(opcao){
             case 1:
-                telaCadastros(&g,&dep,&func);
+                telaCadastros(ff,fd,fhf,fhs,&dep,&func);
                 break;
 
             case 2:
-                telaAlteracoes(&g,&dep,&func);
+                telaAlteracoes(ff,fd,&dep,&func);
                 break;
 
             case 3:
-                telaConsulta(&g,&dep,&func,&hd,&hf,&hs);
+                telaConsulta(ff,fd,&dep,&func,&hd,&hf,&hs);
                 break;
 
             case 4:
@@ -44,7 +51,7 @@ void inicio(){
     }while(opcao < 1 || opcao > 4);
 }
 
-int telaCadastros(geral *g, TDepartamento *dep, TFuncionario *func){
+int telaCadastros(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs, TDepartamento *dep, TFuncionario *func){
     unsigned short int opcao;
 
     limpaTela();
@@ -53,14 +60,14 @@ int telaCadastros(geral *g, TDepartamento *dep, TFuncionario *func){
         printf("Escolha uma das opções abaixo:\n1-Cadastrar Funcionário.\n2-Cadastrar Departamento.\n3-Voltar.");
         scanf("%d",&opcao);
 
-        switch{
+        switch(opcao){
             case 1:
 
-                cadastroFuncionario(g);
+                cadastroFuncionario(ff,fd,fhf,fhs);
                 break;
 
             case 2:
-                cadastroDepartamento();
+                cadastroDepartamento(ff,fd);
                 break;
 
             case 3:
@@ -75,7 +82,7 @@ int telaCadastros(geral *g, TDepartamento *dep, TFuncionario *func){
     return 0;/*É retornado um valor que faça o loop(do/while) da função inicio() seja reiniciado.*/
 }
 
-int telaAlteracoes(geral *g, TDepartamento *dep, TFuncionario *func){
+int telaAlteracoes(FILE *ff,FILE *fd, TDepartamento *dep, TFuncionario *func){
     unsigned short int opcao;
 
     limpaTela();
@@ -83,9 +90,9 @@ int telaAlteracoes(geral *g, TDepartamento *dep, TFuncionario *func){
     do{
         printf("Escolha uma das opções abaixo:\n1-Alterar Dados do Funcionário.\n2-Alterar Salário do Funcionário.\
         \n3-Alterar Departamento de Funcionário.\n4-Alterar Gerente do Departamento.\n5-Voltar.\n\n");
-        scanf("%d",&opcao);
+        scanf("%hu",&opcao);
 
-        switch{
+        switch(opcao){
             case 1:
                 alterarFuncionario();
                 break;
@@ -102,7 +109,7 @@ int telaAlteracoes(geral *g, TDepartamento *dep, TFuncionario *func){
                 alterarGerenteDep();
                 break;
 
-            case 5;
+            case 5:
                 return 0; /*É retornado um valor que faça o loop(do/while) da função inicio() seja reiniciado.*/
 
             default:
@@ -114,22 +121,23 @@ int telaAlteracoes(geral *g, TDepartamento *dep, TFuncionario *func){
     return 0; /*É retornado um valor que faça o loop(do/while) da função inicio() seja reiniciado.*/
 }
 
-int telaConsulta(geral *g, TDepartamento *dep, TFuncionario *func, HistoricoDepartamento *hd, HistoricoFuncionario *hf, HistoricoSalario *hs){
+int telaConsulta(FILE *ff,FILE *fd, TDepartamento *dep, TFuncionario *func, HistoricoDepartamento *hd, HistoricoFuncionario *hf, HistoricoSalario *hs){
     unsigned short int opcao;
-
-    openFile(g.funcionario)
+    char mat[10];
     limpaTela();
 
     do{
         printf("Escolha uma das opções abaixo:\n1-Consultar dados do Funcionário.\n2-Consultar Dados dos Gerentes.\n3-Gerar Folha de pagamento.\
         \n4-Gerar histórico de um período.\n5-Gerar relatório de funcionários por departamento.\n6-Voltar.\n\n");
+        scanf("%hu",&opcao);
 
         switch(opcao){
             case 1:
-                consultaFuncionario();
+                strcpy(mat,coletaMatricula());
+                consultaFuncionario(ff,fd,mat);
                 break;
             case 2:
-                dadosDosGerentes();
+                dadosDosGerentes(ff,fd);
                 break;
             case 3:
                 gerarFolhaPagamento();
@@ -138,7 +146,7 @@ int telaConsulta(geral *g, TDepartamento *dep, TFuncionario *func, HistoricoDepa
                 geraHistoricoPeriodo();
                 break;
             case 5:
-                relatorioFuncionario();
+                relatorioFuncionario(ff,fd);
                 break;
             case 6:
                 return 0; /*É retornado um valor que faça o loop(do/while) da função inicio() seja reiniciado.*/
