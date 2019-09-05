@@ -30,7 +30,7 @@ void inicio(){
 
         switch(opcao){
             case 1:
-                telaCadastros(ff,fd,fhf,fhs,&dep,&func);
+                telaCadastros(ff,fd,fhf,fhs,fhd,&dep,&func);
                 break;
 
             case 2:
@@ -51,7 +51,7 @@ void inicio(){
     }while(opcao < 1 || opcao > 4);
 }
 
-int telaCadastros(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs, TDepartamento *dep, TFuncionario *func){
+int telaCadastros(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs,FILE *fhd, TDepartamento *dep, TFuncionario *func){
     unsigned short int opcao;
 
     limpaTela();
@@ -67,7 +67,7 @@ int telaCadastros(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs, TDepartamento *dep, TFu
                 break;
 
             case 2:
-                cadastroDepartamento(ff,fd);
+                cadastroDepartamento(ff,fd,fhd);
                 break;
 
             case 3:
@@ -133,14 +133,14 @@ int telaConsulta(FILE *ff,FILE *fd, TDepartamento *dep, TFuncionario *func, Hist
 
         switch(opcao){
             case 1:
-                strcpy(mat,coletaMatricula());
+                getMatricula(mat);
                 consultaFuncionario(ff,fd,mat);
                 break;
             case 2:
                 dadosDosGerentes(ff,fd);
                 break;
             case 3:
-                gerarFolhaPagamento();
+                gerarFolhaPagamento(ff);
                 break;
             case 4:
                 geraHistoricoPeriodo();

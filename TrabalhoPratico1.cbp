@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="alteracoes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="alteracoes.h" />
 		<Unit filename="departamento.c">
 			<Option compilerVar="CC" />
 		</Unit>

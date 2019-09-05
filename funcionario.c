@@ -10,16 +10,14 @@
 int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
     TFuncionario tf;
     HistoricoFuncionario hf;
+    HistoricoSalario hs;
     geral g;
     int opcao;
 
     do{
         limpaTela();
-        do{
-            setbuf(stdin,NULL);
-            printf("* Forneça o número de matrícula do funcionário:\n");
-            fgets(tf.matricula,10,stdin);
-        }while(pesquisaMat(tf.matricula,f) == 1);
+
+        getMatricula(tf.matricula);
 
         /*Garante que o campo nome do arquivo de funcionário não seja vazio.*/
         do{
@@ -30,6 +28,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
 
         tf.id = geraID(verificaUltimoID(f,1));
         hf.id_funcionario = tf.id;
+        hs.id_funcionario = tf.id;
 
         do{
             setbuf(stdin,NULL);
@@ -48,6 +47,8 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         }while(validaData(tf.dataNascimento)==0);
 
         sprintf(hf.data,"%s/%s/%s",g.dia,g.mes,g.ano);
+        sprintf(hs.mes,"%s",g.mes);
+        sprintf(hs.ano,"%s",g.ano);
 
         do{
             setbuf(stdin,NULL);
@@ -62,6 +63,12 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
             printf("\nForneça o ID de um departamento para adicionar este funcionário ao departamento:\n");
             scanf("%li",&tf.id_depatamento);
 
+            if(buscaId(fd,2,tf.id_depatamento) == 0)
+                do{
+                    printf("\nCódigo de departamento inexistente ou inválido.Forneça um correto:\n");
+                    scanf("%li",&tf.id_depatamento);
+                }while(buscaId(fd,2,tf.id_depatamento) == 0);
+            hf.id_departamento = tf.id_depatamento;
         }
 
         do{
@@ -71,6 +78,8 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
             if(tf.salario < 0.2f)
                 printf("\nValor Inválido.");
         }while(tf.salario <= 0.2f);
+
+        hs.salario = tf.salario;
 
         setbuf(stdin,NULL);
         printf("\nForneça a rua:\n");
@@ -108,6 +117,8 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         printf("\nForneça um email:\n");
         fgets(tf.email,40,stdin);
 
+        salvaHistoricoSalario(fhs,hs);
+        salvaHistoricoFunc(fhf,hf);
         salvaDadosFunc(f,tf);
         opcao = coletaOpcao();
     }while(opcao == 1);
@@ -142,10 +153,38 @@ void salvaDadosFunc(FILE *f, TFuncionario tf){
     fwrite(&tf,sizeof(tf),1,f);
 }
 
-char coletaMatricula(){
+int gerarFolhaPagamento(FILE *ff){
+    TFuncionario tf;
     char mat[10];
 
-    printf("\nForneça um número de matrícula:\n");
+    if(arquivoVazio(ff) == 0){
+        printf("\nNão há nenhum funcionário cadastrado no momento!!");
+        return 0;
+    }
+
+    getMatricula(ff,mat);
+
+    ///Verificando se o número de matrícula fornecido existe.
+    if(pesquisaMat(mat,ff) == 0){
+        do{
+            printf("\nNúmero de matrícula inexistente.Forneça um válido:\n");
+            getMatricula(mat);
+        }while(pesquisaMat(mat,ff) == 0);
+    }
+
+    ///Buscando o registro equivalente a matrícula fornecida para mostrar os dados na tela.
+    while(fread(&tf,sizeof(tf),1,ff) == 1){
+        if(strcmp(mat,tf.matricula) == 1){
+            printf("\nDetalhes da Folha de Pagamento:");
+            printf("\nNúmero de Matrícula: %s\tNome do Funcionário: %s\tSalário: %f",tf.matricula,tf.nome,tf.salario);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void getMatricula(char mat[]){
+    setbuf(stdin,NULL);
+    printf("* Forneça o número de matrícula do funcionário:\n");
     fgets(mat,10,stdin);
-    return mat;
 }

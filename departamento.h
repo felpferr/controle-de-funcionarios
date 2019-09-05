@@ -10,10 +10,9 @@ typedef struct{
     /*Chave Estrangeira: id_gerente.*/
 }TDepartamento;
 
-int cadastroDepartamento(FILE *,FILE *);
+int cadastroDepartamento(FILE *,FILE *,FILE *);
 int relatorioFuncionario(FILE *,FILE *);
 int dadosDosGerentes(FILE *,FILE *);
-long buscaId(FILE *,int ,long );
 void salvaDadosDep(TDepartamento, FILE *);
 
 #endif // DEPARTAMENTO_H_INCLUDED

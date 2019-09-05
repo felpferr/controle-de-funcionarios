@@ -3,13 +3,15 @@
 #include "general.h"
 #include "funcionario.h"
 
-int cadastroDepartamento(FILE *ff,FILE *fd){
+int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
     TDepartamento td;
+    HistoricoDepartamento hd;
 
     do{
         limpaTela();
 
         td.id = geraID(verificaUltimoID(fd,2));
+        hd.id_departamento = td.id;
 
         setbuf(stdin,NULL);
         printf("* Forneça o nome do departamento:\n");
@@ -23,16 +25,24 @@ int cadastroDepartamento(FILE *ff,FILE *fd){
         printf("\nForneça um Ramal:\n");
         scanf("%hu",&td.Ramal);
 
-
-        printf("\nForneça o ID de um funcionário para designá-lo como gerente deste departamento:\n");
-        scanf("%li",&td.id_gerente);
-        if(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0){
-            do{
-                printf("\nID inválido forneça um correto:");
-                scanf("%li",&td.id_gerente);
-            }while(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0);
+        if(arquivoVazio(ff) == 0){
+            continue;
         }
+        else{
+            setbuf(stdin,NULL);
+            printf("\nForneça o ID de um funcionário para designá-lo como gerente deste departamento:\n");
+            scanf("%li",&td.id_gerente);
+            if(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0){
+                do{
+                    setbuf(stdin,NULL);
+                    printf("\nID inválido forneça um correto:");
+                    scanf("%li",&td.id_gerente);
+                }while(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0);
+            }
+        }
+        hd.id_gerente = td.id_gerente;
 
+        salvaHistoricoDep(fhd,hd);
         salvaDadosDep(td,fd);
     }while(coletaOpcao() == 1);
 
@@ -56,11 +66,13 @@ int relatorioFuncionario(FILE *ff,FILE *fd){
 
         limpaTela();
 
+        setbuf(stdin,NULL);
         printf("\nForneça o ID de um departamento:\n");
         scanf("%li",&id);
 
         if(buscaId(fd,2,id) == 0){
             do{
+                setbuf(stdin,NULL);
                 printf("\nID inexistente ou inválido. Forneça um novo ID:\n");
                 scanf("%li",&id);
             }while(buscaId(fd,2,id) == 0);
@@ -99,11 +111,13 @@ int dadosDosGerentes(FILE *ff,FILE *fd){
         }
 
         limpaTela();
+        setbuf(stdin,NULL);
         printf("Forneça o ID de um departamento:\n");
         scanf("%li",&id);
 
         if(buscaId(fd,2,id) == 0){
             do{
+                setbuf(stdin,NULL);
                 printf("\nID inexistente ou inválido. Forneça um novo ID:\n");
                 scanf("%li",&id);
             }while(buscaId(fd,2,id) == 0);
@@ -119,28 +133,6 @@ int dadosDosGerentes(FILE *ff,FILE *fd){
     }while(coletaOpcao() == 1);
 
     return 1;
-}
-
-long buscaId(FILE *f, int modo,long id){
-    TFuncionario tf;
-    TDepartamento td;
-
-    fseek(f,0,SEEK_SET);
-
-    if(modo == 1){
-        while(fread(&tf,sizeof(tf),1,f) == 1){
-            if(tf.id == id)
-                return 1;
-        }
-        return 0;
-    }
-    else{
-        while(fread(&td,sizeof(td),1,f) == 1){
-            if(td.id == id)
-                return 1;
-        }
-        return 0;
-    }
 }
 
 void salvaDadosDep(TDepartamento td, FILE *fd){

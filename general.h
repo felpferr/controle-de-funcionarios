@@ -5,9 +5,7 @@
 #include <stdlib.h>
 
 typedef struct{
-    char modo[4]/*String que armazena o modo de abertura do arquivo que pretende-se ser aberto.*/,dia[3],mes[3],ano[5];
-    //long idf=0, idd=0; // Campos usados para poder incrementar os campos id através da função geraID().
-    FILE *funcionario, *historicoFun, *historicoSalario, *departamento;
+    char dia[3],mes[3],ano[5];
 }geral;
 
 void sair();
@@ -21,5 +19,6 @@ int validaData(char data[]);
 int validaCPF(char []);
 int coletaOpcao();
 int arquivoVazio(FILE *);
+long buscaId(FILE *,int ,long );
 
 #endif // GENERAL_H_INCLUDED

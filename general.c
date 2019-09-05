@@ -143,3 +143,26 @@ int arquivoVazio(FILE *f){
     else
         return 1;
 }
+
+///Verifica se um id(de funcionário ou departamento) existe.
+long buscaId(FILE *f, int modo,long id){
+    TFuncionario tf;
+    TDepartamento td;
+
+    fseek(f,0,SEEK_SET);
+
+    if(modo == 1){
+        while(fread(&tf,sizeof(tf),1,f) == 1){
+            if(tf.id == id)
+                return 1;
+        }
+        return 0;
+    }
+    else{
+        while(fread(&td,sizeof(td),1,f) == 1){
+            if(td.id == id)
+                return 1;
+        }
+        return 0;
+    }
+}
