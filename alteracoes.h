@@ -2,7 +2,12 @@
 #define ALTERACOES_H_INCLUDED
 
 int alterarFuncionario();
+
+///INCOMPLETA...
 int alterarSalario();
+
+///INCOMPLETA...
+///Tenho que criar uma função para pegar a data atual do computador.
 int alterarDepartamentoFunc();
 int alterarGerenteDep();
 

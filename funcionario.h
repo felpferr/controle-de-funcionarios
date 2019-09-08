@@ -14,31 +14,12 @@ typedef struct{
     /*Chave extrangeira: id_departamento.*/
 }TFuncionario;
 
-typedef struct{
-    long id_funcionario,id_departamento;
-    char data[11];
-
-    /*Chave Primária: id_funcionario, id_departamento, data.*/
-    /*Chaves extrangeiras: id_funcionario, id_departamento.*/
-}HistoricoFuncionario;
-
-typedef struct{
-    long id_funcionario;
-    float salario;
-    unsigned short int mes,ano;
-
-    /*Chave Primária: id_funcionario, ano, mes.*/
-    /*Chave Extrangeira: id_funcionario.*/
-}HistoricoSalario;
-
-int cadastroFuncionario(FILE *);/*criar uma função de pesquisa de funcionário ou adaptar a função de consulta.*/
-int consultaFuncionario(FILE *,char []);/*Nesta função deverá ocorrer uma pesquisa geral no arquivo do campo matrícula
+int cadastroFuncionario(FILE *,FILE *,FILE *,FILE *);/*criar uma função de pesquisa de funcionário ou adaptar a função de consulta.*/
+int consultaFuncionario(FILE *,FILE *,char []);/*Nesta função deverá ocorrer uma pesquisa geral no arquivo do campo matrícula
 (para verificar a sua existência ou não) no momento em que o usuário fornecer uma matrícula para cadastro.*/
-int alterarFuncionario();
-int alterarSalario();
-int gerarFolhaPagamento();
-int alterarDepartamentoFunc();
-int alterarGerenteDep();
-int geraHistoricoPeriodo();
+void salvaDadosFunc(FILE *,TFuncionario);
+int gerarFolhaPagamento(FILE *);
+void getMatricula(char []);
+int verificaMatricula(FILE *,char []);
 
 #endif // FUNCIONARIO_C_INCLUDED

@@ -34,9 +34,8 @@ int pesquisaMat(char mat[], FILE *arq){
     while(fread(&tf,sizeof(tf),1,arq) == 1){
         if(strcmp(tf.matricula,mat) == 1)
             return 1;
-        else
-            return 0;
         }
+    return 0;
 }
 
 ///Gera um valor de ID automaticamente para departamento e funcionário.
@@ -57,15 +56,16 @@ long verificaUltimoID(FILE *f,int m/*usado para indicar qual arquivo em que será
         fread(&tf,sizeof(tf),1,f);
         return tf.id;
     }
-    else
+    else{
         if(sizeof(f) == 0)
             return 0;
         fseek(f,-sizeof(td),SEEK_END);
         fread(&td,sizeof(td),1,f);
         return tf.id;
+    }
 }
 
-//Verificar se essa função funciona depois.
+///Verificar se essa função funciona depois.
 int validaData(char data[]){
     //char dia[3],mes[3],ano[5];
     unsigned short int dia,mes,ano;
@@ -85,9 +85,8 @@ int validaData(char data[]){
             return 0;
         if(ano > 2019)
             return 0;
-
-        return 1;
     }
+    return 1;
 }
 
 int validaCPF(char cpf[]){
@@ -126,11 +125,6 @@ int validaCPF(char cpf[]){
     return 1;
 }
 
-void salvaDadosFunc(TFuncionario tf, FILE *f){
-    fseek(f,0,SEEK_END);
-    fwrite(&tf,sizeof(tf),1,f);
-}
-
 int coletaOpcao(){
     int op;
     printf("\nDeseja continuar?\n1-Sim\n2-Não");
@@ -149,3 +143,28 @@ int arquivoVazio(FILE *f){
     else
         return 1;
 }
+
+///Verifica se um id(de funcionário ou departamento) existe. Retorna 1 caso existir e 0 caso não exista.
+long buscaId(FILE *f, int modo,long id){
+    TFuncionario tf;
+    TDepartamento td;
+
+    fseek(f,0,SEEK_SET);
+
+    if(modo == 1){
+        while(fread(&tf,sizeof(tf),1,f) == 1){
+            if(tf.id == id)
+                return 1;
+        }
+        return 0;
+    }
+    else{
+        while(fread(&td,sizeof(td),1,f) == 1){
+            if(td.id == id)
+                return 1;
+        }
+        return 0;
+    }
+}
+
+
