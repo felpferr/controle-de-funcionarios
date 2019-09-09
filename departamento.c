@@ -2,10 +2,14 @@
 #include "departamento.h"
 #include "general.h"
 #include "funcionario.h"
+#include "historicos.h"
 
 int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
     TDepartamento td;
     HistoricoDepartamento hd;
+    struct tm *data;
+    time_t dataAtual = time(NULL);
+    char ramal[6];///String que pode representar o número de caracteres do tipo unsigned short int.
 
     do{
         limpaTela();
@@ -21,9 +25,19 @@ int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
         printf("\nForneça uma sigla para o departamento:\n");
         fgets(td.sigla,10,stdin);
 
-        setbuf(stdin,NULL);
-        printf("\nForneça um Ramal:\n");
-        scanf("%hu",&td.Ramal);
+        do{
+            setbuf(stdin,NULL);
+            printf("\n* Forneça um Ramal válido:\n");
+            fgets(ramal,6,stdin);
+
+            if(sizeof(ramal) == 0){
+                do{
+                    setbuf(stdin,NULL);
+                    printf("\n* Por favor meu consagrado forneça um Ramal válido:\n");
+                    fgets(ramal,6,stdin);
+                }while(sizeof(ramal) == 0);
+            }
+        }while(verificaRamal(ramal) == 0);
 
         if(arquivoVazio(ff) == 0){
             continue;
@@ -42,11 +56,14 @@ int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
         }
         hd.id_gerente = td.id_gerente;
 
+        data = localtime(&dataAtual);
+        sprintf(hd.data,"%s/%s/%s",data->tm_mday,data->tm_mon++,data->tm_year);///VERIFICAR DEPOIS SE A COERÇÃO DE TIPO NÃO ESTÁ GERANDO INCONSISTÊNCIA
+
         salvaHistoricoDep(fhd,hd);
         salvaDadosDep(td,fd);
     }while(coletaOpcao() == 1);
 
-    return 1;
+    return -1;
 }
 
 int relatorioFuncionario(FILE *ff,FILE *fd){
@@ -94,7 +111,7 @@ int relatorioFuncionario(FILE *ff,FILE *fd){
         printf("\nTotal da folha de pagamento: %f",soma);
     }while(coletaOpcao() == 1);
 
-    return 1;
+    return -1;
 }
 
 int dadosDosGerentes(FILE *ff,FILE *fd){
@@ -132,10 +149,23 @@ int dadosDosGerentes(FILE *ff,FILE *fd){
 
     }while(coletaOpcao() == 1);
 
-    return 1;
+    return -1;
 }
 
 void salvaDadosDep(TDepartamento td, FILE *fd){
     fseek(fd,0,SEEK_END);
     fwrite(&td,sizeof(td),1,fd);
+}
+
+int verificaRamal(char ramal[]){
+    int i;
+
+    for(i = 0; i < 6/*<-tamanho da string ramal*/;i++){
+        if(isalpha(ramal[i]) == 1)///Se existir um caractere alfabético na string é retornado 0.
+            return 0;
+        if(isalnum(ramal[i]) == 0)///Se existir um caractere especial na string é retornado 0.
+        ///Verificando se o caractere não é especial pois a função isalpha() retorna o mesmo valor para números e caracteres especiais.
+            return 0;
+    }
+    return 1;///Caso o ramal seja composto apenas por números é retornado 1.
 }

@@ -4,6 +4,7 @@
 
 int geraHistoricoPeriodo(){
 
+    return -1;
 }
 
 void salvaHistoricoFunc(FILE *fhf,HistoricoFuncionario hf){

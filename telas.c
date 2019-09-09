@@ -62,12 +62,11 @@ int telaCadastros(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs,FILE *fhd, TDepartamento
 
         switch(opcao){
             case 1:
-
-                cadastroFuncionario(ff,fd,fhf,fhs);
+                opcao = cadastroFuncionario(ff,fd,fhf,fhs);
                 break;
 
             case 2:
-                cadastroDepartamento(ff,fd,fhd);
+                opcao = cadastroDepartamento(ff,fd,fhd);
                 break;
 
             case 3:
@@ -94,19 +93,19 @@ int telaAlteracoes(FILE *ff,FILE *fd, TDepartamento *dep, TFuncionario *func){
 
         switch(opcao){
             case 1:
-                alterarFuncionario();
+                opcao = alterarFuncionario();
                 break;
 
             case 2:
-                alterarSalario();
+                opcao = alterarSalario(ff,fhs);
                 break;
 
             case 3:
-                alterarDepartamentoFunc();
+                opcao = alterarDepartamentoFunc(ff,fd,fhf);
                 break;
 
             case 4:
-                alterarGerenteDep();
+                opcao = alterarGerenteDep(ff,fd,fhd);
                 break;
 
             case 5:
@@ -134,19 +133,19 @@ int telaConsulta(FILE *ff,FILE *fd, TDepartamento *dep, TFuncionario *func, Hist
         switch(opcao){
             case 1:
                 getMatricula(mat);
-                consultaFuncionario(ff,fd,mat);
+                opcao = consultaFuncionario(ff,fd,mat);
                 break;
             case 2:
-                dadosDosGerentes(ff,fd);
+                opcao = dadosDosGerentes(ff,fd);
                 break;
             case 3:
-                gerarFolhaPagamento(ff);
+                opcao = gerarFolhaPagamento(ff);
                 break;
             case 4:
-                geraHistoricoPeriodo();
+                opcao = geraHistoricoPeriodo();
                 break;
             case 5:
-                relatorioFuncionario(ff,fd);
+                opcao = relatorioFuncionario(ff,fd);
                 break;
             case 6:
                 return 0; /*É retornado um valor que faça o loop(do/while) da função inicio() seja reiniciado.*/

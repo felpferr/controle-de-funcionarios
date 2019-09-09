@@ -4,11 +4,8 @@
 int alterarFuncionario();
 
 ///INCOMPLETA...
-int alterarSalario();
-
-///INCOMPLETA...
-///Tenho que criar uma função para pegar a data atual do computador.
-int alterarDepartamentoFunc();
+int alterarSalario(FILE *,FILE *);
+int alterarDepartamentoFunc(FILE *,FILE *,FILE *);
 int alterarGerenteDep();
 
 #endif // ALTERACOES_H_INCLUDED

@@ -168,3 +168,15 @@ long buscaId(FILE *f, int modo,long id){
 }
 
 
+int verificaNumero(char ramal[],unsigned short int tam){
+    int i;
+
+    for(i = 0; i < tam/*<-tamanho da string ramal*/;i++){
+        if(isalpha(ramal[i]) == 1)///Se existir um caractere alfabético na string é retornado 0.
+            return 0;
+        if(isalnum(ramal[i]) == 0)///Se existir um caractere especial na string é retornado 0.
+        ///Verificando se o caractere não é especial pois a função isalpha() retorna o mesmo valor para números e caracteres especiais.
+            return 0;
+    }
+    return 1;///Caso o ramal seja composto apenas por números é retornado 1.
+}

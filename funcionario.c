@@ -144,7 +144,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         opcao = coletaOpcao();
     }while(opcao == 1);
 
-    return 1;
+    return -1;
 }
 
 int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
@@ -166,7 +166,7 @@ int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
         }
     }
 
-    return 1;
+    return -1;
 }
 
 void salvaDadosFunc(FILE *f, TFuncionario tf){
@@ -198,10 +198,10 @@ int gerarFolhaPagamento(FILE *ff){
         if(strcmp(mat,tf.matricula) == 1){
             printf("\nDetalhes da Folha de Pagamento:");
             printf("\nNúmero de Matrícula: %s\tNome do Funcionário: %s\tSalário: %f",tf.matricula,tf.nome,tf.salario);
-            return 1;
+            return -1;
         }
     }
-    return 0;
+    return -1;
 }
 
 void getMatricula(char matricula[]){
