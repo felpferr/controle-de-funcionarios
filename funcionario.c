@@ -5,15 +5,11 @@
 #include "historicos.h"
 #include "general.h"
 
-///Fazer depois uma função para printar na tela uma mensagem de erro.
-
-///INCOMPLETA...(FALTA ADICIONAR A DATA DE REGISTRAMENTO DO FUNCIONÁRIO NO HISTÓRICO DE FUNCIONÁRIO E SALÁRIO)
 int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
     TFuncionario tf;
     HistoricoFuncionario hf;
     HistoricoSalario hs;
     geral g;
-    int opcao;
     struct tm *data;
     time_t dataAtual = time(NULL);
 
@@ -26,17 +22,16 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
                 printf("\nNúmero de matrícula repetido.");
                 getMatricula(tf.matricula);
             }while(verificaMatricula(ff,tf.matricula) == 0);
-        else
-            continue;
 
         /*Garante que o campo nome do arquivo de funcionário não seja vazio.*/
         do{
             setbuf(stdin,NULL);
             printf("\n* Forneça o nome do funcionário:\n");
             fgets(tf.nome,60,stdin);
+            removeBarraN(tf.nome);
         }while(strlen(tf.nome) == 0);
 
-        tf.id = geraID(verificaUltimoID(f,1));
+        tf.id = geraID(verificaUltimoID(ff,1));
         hf.id_funcionario = tf.id;
         hs.id_funcionario = tf.id;
 
@@ -46,10 +41,10 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
             printf("Dia: ");
             fgets(g.dia,3,stdin);
             setbuf(stdin,NULL);
-            printf("Mês: ");
+            printf("\nMês: ");
             fgets(g.mes,3,stdin);
             setbuf(stdin,NULL);
-            printf("Ano: ");
+            printf("\nAno: ");
             fgets(g.ano,5,stdin);
             setbuf(stdin,NULL);
 
@@ -96,10 +91,12 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         setbuf(stdin,NULL);
         printf("\nForneça a rua:\n");
         fgets(tf.rua,40,stdin);
+        removeBarraN(tf.rua);
 
         setbuf(stdin,NULL);
         printf("\nForneça o bairro:\n");
         fgets(tf.bairro,30,stdin);
+        removeBarraN(tf.bairro);
 
         do{
             setbuf(stdin,NULL);
@@ -112,22 +109,27 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         setbuf(stdin,NULL);
         printf("\nForneça um complemento:\n");
         fgets(tf.complemento,30,stdin);
+        removeBarraN(tf.complemento);
 
         setbuf(stdin,NULL);
         printf("\nForneça a cidade:\n");
         fgets(tf.cidade,40,stdin);
+        removeBarraN(tf.cidade);
 
         setbuf(stdin,NULL);
         printf("\nForneça a UF:\n");
         fgets(tf.UF,3,stdin);
+        removeBarraN(tf.UF);
 
         setbuf(stdin,NULL);
         printf("\nForneça o CEP:\n");
         fgets(tf.CEP,9,stdin);
+        removeBarraN(tf.CEP);
 
         setbuf(stdin,NULL);
         printf("\nForneça um email:\n");
         fgets(tf.email,40,stdin);
+        removeBarraN(tf.email);
 
         data = localtime(&dataAtual);
 
@@ -136,13 +138,13 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         hs.ano = data->tm_year;
 
         ///Adicionando a data do sistema no registro do histórico de funcionário.
-        sprintf(hf.data,"%s/%s/%s",data->tm_mday,data->tm_mon++,data->tm_year);
+        sprintf(hf.data,"%d/%d/%d",data->tm_mday,data->tm_mon++,data->tm_year);
 
         salvaHistoricoSalario(fhs,hs);
         salvaHistoricoFunc(fhf,hf);
-        salvaDadosFunc(f,tf);
-        opcao = coletaOpcao();
-    }while(opcao == 1);
+        salvaDadosFunc(ff,tf);
+
+    }while(coletaOpcao() == 1);
 
     return -1;
 }
@@ -183,7 +185,7 @@ int gerarFolhaPagamento(FILE *ff){
         return 0;
     }
 
-    getMatricula(ff,mat);
+    getMatricula(mat);
 
     ///Verificando se o número de matrícula fornecido existe.
     if(pesquisaMat(mat,ff) == 0){

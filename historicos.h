@@ -26,7 +26,7 @@ typedef struct{
     /*Chaves Estrangeiras: id_funcionario, id_departamento.*/
 }HistoricoDepartamento;
 
-int geraHistoricoPeriodo();///Não implementado;
+int geraHistoricoPeriodo(FILE *, FILE *);///Incompleta;
 void salvaHistoricoFunc(FILE *, HistoricoFuncionario);
 void salvaHistoricoDep(FILE *, HistoricoDepartamento);
 void salvaHistoricoSalario(FILE *, HistoricoSalario);

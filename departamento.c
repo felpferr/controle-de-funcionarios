@@ -57,7 +57,7 @@ int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
         hd.id_gerente = td.id_gerente;
 
         data = localtime(&dataAtual);
-        sprintf(hd.data,"%s/%s/%s",data->tm_mday,data->tm_mon++,data->tm_year);///VERIFICAR DEPOIS SE A COERÇÃO DE TIPO NÃO ESTÁ GERANDO INCONSISTÊNCIA
+        sprintf(hd.data,"%d/%d/%d",data->tm_mday,data->tm_mon++,data->tm_year);///VERIFICAR DEPOIS SE A COERÇÃO DE TIPO NÃO ESTÁ GERANDO INCONSISTÊNCIA
 
         salvaHistoricoDep(fhd,hd);
         salvaDadosDep(td,fd);

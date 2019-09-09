@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "general.h"
 #include "funcionario.h"
 #include "departamento.h"
@@ -8,7 +9,7 @@ void sair(){
 }
 
 void limpaTela(){
-    system("cls" || "clear");
+    system("cls || clear");
 }
 
 int openFile(FILE *arq,char nome[], char MODO[]){
@@ -67,7 +68,7 @@ long verificaUltimoID(FILE *f,int m/*usado para indicar qual arquivo em que será
 
 ///Verificar se essa função funciona depois.
 int validaData(char data[]){
-    //char dia[3],mes[3],ano[5];
+    char token[11];
     unsigned short int dia,mes,ano;
     /*
     strcpy(dia,strtok(data,"/"));
@@ -75,9 +76,11 @@ int validaData(char data[]){
     strcpy(ano,strtok(data,"/"));
     */
     //Caso o sprintf não funcione descomentar e usar o cast normal usando a função itoa().
-    sprintf(dia,"%d",(int)strtok(data,"/"));
-    sprintf(mes,"%d",(int)strtok(data,"/"));
-    sprintf(ano,"%d",(int)strtok(data,"/"));
+    dia = (int)strtok(data,"/");
+    strcpy(token,strtok(data,"/"));
+    mes = (int)strtok(token,"/");
+    strcpy(token,strtok(data,"/"));
+    ano = (int)strtok(token,"/");
 
     //Verificar se essa verificação funciona depois.
     if( (dia >= 1 && dia <= 31)  && (mes >= 1 && mes <= 12) && (ano >= 1960)){
@@ -168,15 +171,3 @@ long buscaId(FILE *f, int modo,long id){
 }
 
 
-int verificaNumero(char ramal[],unsigned short int tam){
-    int i;
-
-    for(i = 0; i < tam/*<-tamanho da string ramal*/;i++){
-        if(isalpha(ramal[i]) == 1)///Se existir um caractere alfabético na string é retornado 0.
-            return 0;
-        if(isalnum(ramal[i]) == 0)///Se existir um caractere especial na string é retornado 0.
-        ///Verificando se o caractere não é especial pois a função isalpha() retorna o mesmo valor para números e caracteres especiais.
-            return 0;
-    }
-    return 1;///Caso o ramal seja composto apenas por números é retornado 1.
-}
