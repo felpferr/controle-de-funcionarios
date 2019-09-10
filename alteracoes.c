@@ -25,6 +25,8 @@ int alterarFuncionario(FILE *ff, FILE *fd, FILE *fhf, FILE *fhs){
     do{
         limpaTela();
 
+        msg01();
+
         getMatricula(mat);
         removeBarraN(mat);
 
@@ -63,9 +65,11 @@ int alterarFuncionario(FILE *ff, FILE *fd, FILE *fhf, FILE *fhs){
             printf("Dia: ");
             fgets(g.dia,3,stdin);
             setbuf(stdin,NULL);
+            promptUniversal();
             printf("\nMês: ");
             fgets(g.mes,3,stdin);
             setbuf(stdin,NULL);
+            promptUniversal();
             printf("\nAno: ");
             fgets(g.ano,5,stdin);
             setbuf(stdin,NULL);
@@ -77,6 +81,7 @@ int alterarFuncionario(FILE *ff, FILE *fd, FILE *fhf, FILE *fhs){
 
         do{
             setbuf(stdin,NULL);
+            promptUniversal();
             printf("* Forneça o CPF:\n");
             fgets(tf.CPF,12,stdin);
         }while(validaCPF(tf.CPF) == 0);
@@ -88,6 +93,7 @@ int alterarFuncionario(FILE *ff, FILE *fd, FILE *fhf, FILE *fhs){
             continue;
         }
         else{
+            promptUniversal();
             printf("\nForneça o ID de um departamento para adicionar este funcionário ao departamento:\n");
             scanf("%li",&tf.id_depatamento);
 
@@ -318,6 +324,9 @@ int alterarGerenteDep(FILE *ff,FILE *fd, FILE *fhd){
 
     do{
         limpaTela();
+
+        msg01();
+
         printf("Forneça o ID do departamento:\n");
         scanf("%li",&idDep);
         ///Verificando se o ID fornecido existe no arquivo de departamento.

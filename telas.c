@@ -19,11 +19,30 @@ void inicio(){
 
     setlocale(LC_ALL,"Portuguese");
 
-    ff = fopen("funcionario.dat","wr");
-    fd = fopen("departamento.dat","wr");
-    fhf = fopen("historicoFuncionario.dat","wr");
-    fhs = fopen("historicoSalario.dat","wr");
-    fhd = fopen("historicoDepartamento.dat","wr");
+    ff = fopen("funcionario.dat","r+");
+    if(ff == NULL){
+        ff = fopen("funcionario.dat","w+");
+    }
+
+    fd = fopen("departamento.dat","r+");
+    if(fd == NULL){
+        fd = fopen("departamento.dat","w+");
+    }
+
+    fhf = fopen("historicoFuncionario.dat","r+");
+    if(fhf == NULL){
+        fhf = fopen("historicoFuncionario.dat","w+");
+    }
+
+    fhs = fopen("historicoSalario.dat","r+");
+    if(fhs == NULL){
+        fhs = fopen("historicoSalario.dat","w+");
+    }
+
+    fhd = fopen("historicoDepartamento.dat","r+");
+    if(fhd == NULL){
+        fhd = fopen("historicoDepartamento.dat","w+");
+    }
 
     printf("\t\t\t\tBem Vindo...\n\n");
 
@@ -56,6 +75,12 @@ void inicio(){
                 break;
         };
     }while(opcao < 1 || opcao > 4);
+
+    fclose(ff);
+    fclose(fd);
+    fclose(fhf);
+    fclose(fhs);
+    fclose(fhd);
 }
 
 int telaCadastros(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs,FILE *fhd, TDepartamento *dep, TFuncionario *func){
@@ -64,7 +89,7 @@ int telaCadastros(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs,FILE *fhd, TDepartamento
     limpaTela();
 
     do{
-        printf("Escolha uma das opções abaixo:\n1-Cadastrar Funcionário.\n2-Cadastrar Departamento.\n3-Voltar.");
+        printf("Escolha uma das opções abaixo:\n1-Cadastrar Funcionário.\n2-Cadastrar Departamento.\n3-Voltar.\n");
         scanf("%hu",&opcao);
 
         switch(opcao){
@@ -97,7 +122,7 @@ int telaAlteracoes(FILE *ff,FILE *fd,FILE *fhd,FILE *fhs,FILE *fhf, TDepartament
 
     do{
         printf("Escolha uma das opções abaixo:\n1-Alterar Dados do Funcionário.\n2-Alterar Salário do Funcionário.\
-        \n3-Alterar Departamento de Funcionário.\n4-Alterar Gerente do Departamento.\n5-Voltar.\n\n");
+        \n3-Alterar Departamento de Funcionário.\n4-Alterar Gerente do Departamento.\n5-Voltar.\n");
         scanf("%hu",&opcao);
 
         switch(opcao){
@@ -140,7 +165,7 @@ int telaConsulta(FILE *ff, FILE *fd, FILE *fhs, TDepartamento *dep, TFuncionario
 
     do{
         printf("Escolha uma das opções abaixo:\n1-Consultar dados do Funcionário.\n2-Consultar Dados dos Gerentes.\n3-Gerar Folha de pagamento.\
-        \n4-Gerar histórico de um período.\n5-Gerar relatório de funcionários por departamento.\n6-Voltar.\n\n");
+        \n4-Gerar histórico de um período.\n5-Gerar relatório de funcionários por departamento.\n6-Voltar.\n");
         scanf("%hu",&opcao);
 
         switch(opcao){

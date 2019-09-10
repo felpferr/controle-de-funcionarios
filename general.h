@@ -25,5 +25,7 @@ int validaCPF(char []);
 int coletaOpcao();
 int arquivoVazio(FILE *);
 long buscaId(FILE *,int ,long );
+void promptUniversal();
+void msg01();
 
 #endif // GENERAL_H_INCLUDED

@@ -79,7 +79,7 @@ int validaData(char data[]){
     dia = (int)strtok(data,"/");
     strcpy(token,strtok(data,"/"));
     mes = (int)strtok(token,"/");
-    strcpy(token,strtok(data,"/"));
+    strcpy(token,strtok(token,"/"));
     ano = (int)strtok(token,"/");
 
     //Verificar se essa verificação funciona depois.
@@ -93,39 +93,51 @@ int validaData(char data[]){
 }
 
 int validaCPF(char cpf[]){
-    int i, j, d1 = 0, d2 = 0;
-    if(strlen(cpf) != 11)
-        return 0;
-    else
-        if((strcmp(cpf,"00000000000") == 0) || (strcmp(cpf,"11111111111") == 0) || (strcmp(cpf,"22222222222") == 0) ||
-            (strcmp(cpf,"33333333333") == 0) || (strcmp(cpf,"44444444444") == 0) || (strcmp(cpf,"55555555555") == 0) ||
-            (strcmp(cpf,"66666666666") == 0) || (strcmp(cpf,"77777777777") == 0) || (strcmp(cpf,"88888888888") == 0) ||
-            (strcmp(cpf,"99999999999") == 0))
-            return 0; ///se o CPF tiver todos os números iguais ele é inválido.
-    else{
-        ///digito 1---------------------------------------------------
-        for(i = 0, j = 10; i < strlen(cpf)-2; i++, j--) ///multiplica os números de 10 a 2 e soma os resultados dentro de digito1
-            d1 += (cpf[i]-48) * j;
-        d1 %= 11;
-        if(d1 < 2)
-            d1 = 0;
-        else
-            d1 = 11 - d1;
-        if((cpf[9]-48) != d1)
-            return 0; ///se o digito 1 não for o mesmo que o da validação CPF é inválido
-        else{
-            for(i = 0, j = 11; i < strlen(cpf)-1; i++, j--) ///multiplica os números de 11 a 2 e soma os resultados dentro de digito2
-                    d2 += (cpf[i]-48) * j;
-        d2 %= 11;
-        if(d2 < 2)
-            d2 = 0;
-        else
-            d2 = 11 - d2;
-        if((cpf[10]-48) != d2)
-            return 0; ///se o digito 2 não for o mesmo que o da validação CPF é inválido
-        }
+    int icpf[11];
+    int i,somador = 0,digi1,result1,result2,digi2,valor;
+
+    //Efetua a conversao de array de char para um array de int.
+    for(i = 0; i < 11; i++)  {
+        icpf[i] = cpf[i]-48;
     }
-    return 1;
+    for(i = 0; i < 10; i++){
+        if((icpf[i] == icpf[i+1]) && (icpf[i+1] == icpf[i+2]))
+            return 0;
+    }
+    //PRIMEIRO DIGITO.
+    for(i = 0; i < 9; i++){
+        somador += icpf[i] * (10-i);
+    }
+    result1=somador%11;
+    if( (result1==0) || (result1==1) ){
+        digi1=0;
+    }
+    else{
+        digi1 = 11 - result1;
+    }
+    //SEGUNDO DIGITO.
+    somador = 0;
+    for(i = 0; i < 10; i++){
+        somador += icpf[i] * (11-i);
+    }
+
+    valor = (somador/11) * 11;
+    result2 = somador - valor;
+
+    if( (result2 == 0) || (result2 == 1) ){
+        digi2 = 0;
+    }
+    else{
+        digi2 = 11 - result2;
+    }
+    //RESULTADOS DA VALIDACAO.
+    if((digi1 == icpf[9]) && (digi2 == icpf[10])){///CPF Válido.
+            return 1;
+    }
+    else{///CPF Inválido.
+        return 2;
+    }
+
 }
 
 int coletaOpcao(){
@@ -141,7 +153,8 @@ int coletaOpcao(){
 }
 
 int arquivoVazio(FILE *f){
-    if(sizeof(f) == 0)
+    fseek(f,0,SEEK_END);
+    if(ftell(f)-1 == 0)
         return 0;
     else
         return 1;
@@ -170,4 +183,11 @@ long buscaId(FILE *f, int modo,long id){
     }
 }
 
+void promptUniversal(){
+    getchar();
+    setbuf(stdin,NULL);
+}
 
+void msg01(){
+    printf("Campos precedidos por * são obrigatórios!!\n\n");
+}

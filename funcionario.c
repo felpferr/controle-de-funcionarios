@@ -16,6 +16,8 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
     do{
         limpaTela();
 
+        msg01();
+
         getMatricula(tf.matricula);
         if(verificaMatricula(ff,tf.matricula) == 0)
             do{
@@ -41,9 +43,11 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
             printf("Dia: ");
             fgets(g.dia,3,stdin);
             setbuf(stdin,NULL);
+            promptUniversal();
             printf("\nMês: ");
             fgets(g.mes,3,stdin);
             setbuf(stdin,NULL);
+            promptUniversal();
             printf("\nAno: ");
             fgets(g.ano,5,stdin);
             setbuf(stdin,NULL);
@@ -55,8 +59,9 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
 
         do{
             setbuf(stdin,NULL);
-            printf("* Forneça o CPF:\n");
+            printf("\n* Forneça o CPF:\n");
             fgets(tf.CPF,12,stdin);
+            promptUniversal();
         }while(validaCPF(tf.CPF) == 0);
 
 
@@ -67,6 +72,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
             continue;
         }
         else{
+            promptUniversal();
             printf("\nForneça o ID de um departamento para adicionar este funcionário ao departamento:\n");
             scanf("%li",&tf.id_depatamento);
 
@@ -153,6 +159,12 @@ int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
     TFuncionario tf;
     TDepartamento td;
 
+    if(arquivoVazio(ff) == 0){
+        printf("\nNão há funcionários cadastrados no momento.");
+        return -1;
+    }
+
+
     fseek(ff,0,SEEK_SET);
     fseek(fd,0,SEEK_SET);
 
@@ -181,7 +193,7 @@ int gerarFolhaPagamento(FILE *ff){
     char mat[10];
 
     if(arquivoVazio(ff) == 0){
-        printf("\nNão há nenhum funcionário cadastrado no momento!!");
+        printf("\nNão há nenhum funcionário cadastrado no momento.");
         return 0;
     }
 
@@ -208,6 +220,7 @@ int gerarFolhaPagamento(FILE *ff){
 
 void getMatricula(char matricula[]){
     setbuf(stdin,NULL);
+    msg01();
     printf("* Forneça o número de matrícula do funcionário:\n");
     fgets(matricula,10,stdin);
 }
