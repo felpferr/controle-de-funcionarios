@@ -55,7 +55,7 @@ int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
         td.Ramal = (int)ramal;
 
         if(arquivoVazio(ff) == 0){
-            continue;
+            ;
         }
         else{
             setbuf(stdin,NULL);
@@ -180,7 +180,7 @@ void salvaDadosDep(TDepartamento td, FILE *fd){
 }
 
 int verificaRamal(char ramal[]){
-    int i,iRamal[6];
+    int i;
 
     removeBarraN(ramal);
 

@@ -20,29 +20,29 @@ void inicio(){
 
     setlocale(LC_ALL,"Portuguese");
 
-    ff = fopen("funcionario.txt","r+");
+    ff = fopen("funcionario.dat","rb+");
     if(ff == NULL){
-        ff = fopen("funcionario.txt","w+");
+        ff = fopen("funcionario.dat","wb+");
     }
 
-    fd = fopen("departamento.txt","r+");
+    fd = fopen("departamento.dat","rb+");
     if(fd == NULL){
-        fd = fopen("departamento.txt","w+");
+        fd = fopen("departamento.dat","wb+");
     }
 
-    fhf = fopen("historicoFuncionario.txt","r+");
+    fhf = fopen("historicoFuncionario.dat","rb+");
     if(fhf == NULL){
-        fhf = fopen("historicoFuncionario.txt","w+");
+        fhf = fopen("historicoFuncionario.dat","wb+");
     }
 
-    fhs = fopen("historicoSalario.txt","r+");
+    fhs = fopen("historicoSalario.dat","rb+");
     if(fhs == NULL){
-        fhs = fopen("historicoSalario.txt","w+");
+        fhs = fopen("historicoSalario.dat","wb+");
     }
 
-    fhd = fopen("historicoDepartamento.txt","r+");
+    fhd = fopen("historicoDepartamento.dat","rb+");
     if(fhd == NULL){
-        fhd = fopen("historicoDepartamento.txt","w+");
+        fhd = fopen("historicoDepartamento.dat","wb+");
     }
 
     printf("\t\t\t\tBem Vindo...\n\n");

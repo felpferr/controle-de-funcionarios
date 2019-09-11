@@ -33,7 +33,7 @@ int pesquisaMat(char mat[], FILE *arq){
 
     fseek(arq,0,SEEK_SET);
     while(fread(&tf,sizeof(tf),1,arq) == 1){
-        if(strcmp(tf.matricula,mat) == 1)
+        if(strcmp(tf.matricula,mat) == 0)
             return 1;
         }
     return 0;
@@ -51,14 +51,14 @@ long verificaUltimoID(FILE *f,int m/*usado para indicar qual arquivo em que será
     TFuncionario tf;
     TDepartamento td;
     if(m == 1){
-        if(sizeof(f) == 0)
+        if(arquivoVazio(f) == 0)
             return 0;
         fseek(f,-sizeof(tf),SEEK_END);
         fread(&tf,sizeof(tf),1,f);
         return tf.id;
     }
     else{
-        if(sizeof(f) == 0)
+        if(arquivoVazio(f) == 0)
             return 0;
         fseek(f,-sizeof(td),SEEK_END);
         fread(&td,sizeof(td),1,f);
@@ -93,51 +93,41 @@ int validaData(char data[]){
 }
 
 int validaCPF(char cpf[]){
-    int icpf[11];
-    int i,somador = 0,digi1,result1,result2,digi2,valor;
-
-    //Efetua a conversao de array de char para um array de int.
-    for(i = 0; i < 11; i++)  {
-        icpf[i] = cpf[i]-48;
+    int i, j, digito1 = 0, digito2 = 0;
+    if(strlen(cpf) != 11)
+        return 0;
+    else if((strcmp(cpf,"00000000000") == 0) || (strcmp(cpf,"11111111111") == 0) || (strcmp(cpf,"22222222222") == 0) ||
+            (strcmp(cpf,"33333333333") == 0) || (strcmp(cpf,"44444444444") == 0) || (strcmp(cpf,"55555555555") == 0) ||
+            (strcmp(cpf,"66666666666") == 0) || (strcmp(cpf,"77777777777") == 0) || (strcmp(cpf,"88888888888") == 0) ||
+            (strcmp(cpf,"99999999999") == 0))
+        return 0; ///se o CPF tiver todos os números iguais ele é inválido.
+    else
+    {
+        ///digito 1---------------------------------------------------
+        for(i = 0, j = 10; i < strlen(cpf)-2; i++, j--) ///multiplica os números de 10 a 2 e soma os resultados dentro de digito1
+            digito1 += (cpf[i]-48) * j;
+        digito1 %= 11;
+        if(digito1 < 2)
+            digito1 = 0;
+        else
+            digito1 = 11 - digito1;
+        if((cpf[9]-48) != digito1)
+            return 0; ///se o digito 1 não for o mesmo que o da validação CPF é inválido
+        else
+        ///digito 2--------------------------------------------------
+        {
+            for(i = 0, j = 11; i < strlen(cpf)-1; i++, j--) ///multiplica os números de 11 a 2 e soma os resultados dentro de digito2
+                    digito2 += (cpf[i]-48) * j;
+        digito2 %= 11;
+        if(digito2 < 2)
+            digito2 = 0;
+        else
+            digito2 = 11 - digito2;
+        if((cpf[10]-48) != digito2)
+            return 0; ///se o digito 2 não for o mesmo que o da validação CPF é inválido
+        }
     }
-    for(i = 0; i < 10; i++){
-        if((icpf[i] == icpf[i+1]) && (icpf[i+1] == icpf[i+2]))
-            return 0;
-    }
-    //PRIMEIRO DIGITO.
-    for(i = 0; i < 9; i++){
-        somador += icpf[i] * (10-i);
-    }
-    result1=somador%11;
-    if( (result1==0) || (result1==1) ){
-        digi1=0;
-    }
-    else{
-        digi1 = 11 - result1;
-    }
-    //SEGUNDO DIGITO.
-    somador = 0;
-    for(i = 0; i < 10; i++){
-        somador += icpf[i] * (11-i);
-    }
-
-    valor = (somador/11) * 11;
-    result2 = somador - valor;
-
-    if( (result2 == 0) || (result2 == 1) ){
-        digi2 = 0;
-    }
-    else{
-        digi2 = 11 - result2;
-    }
-    //RESULTADOS DA VALIDACAO.
-    if((digi1 == icpf[9]) && (digi2 == icpf[10])){///CPF Válido.
-            return 1;
-    }
-    else{///CPF Inválido.
-        return 2;
-    }
-
+    return 1;
 }
 
 int coletaOpcao(){

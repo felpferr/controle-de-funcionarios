@@ -32,7 +32,7 @@ int geraHistoricoPeriodo(FILE *ff, FILE *fhs){
 
         ///Buscando o id do funcionário que possui a matrícula fornecida.
         while(fread(&tf,sizeof(tf),1,ff) == 1){
-            if(strcmp(mat,tf.matricula) == 1)
+            if(strcmp(mat,tf.matricula) == 0)
                 break;
         }
 

@@ -39,8 +39,8 @@ int alterarFuncionario(FILE *ff, FILE *fd, FILE *fhf, FILE *fhs){
         }
 
         ///Posicionando o arquivo no registro que será alterado.
-        while(fread(&tf,sizeof(tf),1,ff) == 1){
-            if(strcmp(mat,tf.matricula) == 1){
+        while(fread(&tf,sizeof(tf),1,ff)){
+            if(strcmp(mat,tf.matricula) == 0){
                 fseek(ff,0,SEEK_CUR);
                 break;
             }
@@ -212,7 +212,7 @@ int alterarSalario(FILE *ff,FILE *fhs){
 
     ///Buscando primeiramente no arquivo de funcionários o registro que possui a matrícula fornecida
     while(fread(&tf,sizeof(tf),1,ff) == 1){
-        if(strcmp(mat,tf.matricula) == 1){
+        if(strcmp(mat,tf.matricula) == 0){
             do{
                 setbuf(stdin,NULL);
                 printf("Forneça o salário do funcionário:\n");
@@ -274,7 +274,7 @@ int alterarDepartamentoFunc(FILE *ff,FILE *fd,FILE *fhf){
 
         ///Posicionando o arquivo na posição referente ao registro do funcionário para não criar réplicas de dados.
         while(fread(&tf,sizeof(tf),1,ff) == 1){
-            if(strcmp(matricula,tf.matricula) == 1){
+            if(strcmp(matricula,tf.matricula) == 0){
                 fseek(ff,0,SEEK_CUR);
                 break;
             }

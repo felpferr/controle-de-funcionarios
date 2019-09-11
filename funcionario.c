@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "funcionario.h"
 #include "departamento.h"
 #include "historicos.h"
@@ -17,6 +18,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         limpaTela();
 
         getMatricula(tf.matricula);
+        removeBarraN(tf.matricula);
         if(verificaMatricula(ff,tf.matricula) == 0)
             do{
                 printf("\nNúmero de matrícula repetido.\n");
@@ -60,7 +62,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
             setbuf(stdin,NULL);
             printf("\n* Forneça o CPF:\n");
             fgets(tf.CPF,12,stdin);
-            promptUniversal();
+            removeBarraN(tf.CPF);
         }while(validaCPF(tf.CPF) == 0);
 
 
@@ -111,6 +113,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
             setbuf(stdin,NULL);
             printf("\nForneça o número da casa ou apartamento:\n");
             scanf("%d",&tf.Numero);
+            promptUniversal();
             if(tf.Numero < 0)
                 printf("\nValor Inválido.");
         }while(tf.Numero < 0);
@@ -124,7 +127,6 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
 
         setbuf(stdin,NULL);
         promptUniversal();
-        setbuf(stdin,NULL);
         printf("\nForneça a cidade:\n");
         fgets(tf.cidade,40,stdin);
         removeBarraN(tf.cidade);
@@ -137,13 +139,11 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
 
         setbuf(stdin,NULL);
         promptUniversal();
-        setbuf(stdin,NULL);
         printf("\nForneça o CEP:\n");
         fgets(tf.CEP,9,stdin);
         removeBarraN(tf.CEP);
 
         setbuf(stdin,NULL);
-        promptUniversal();
         setbuf(stdin,NULL);
         printf("\nForneça um email:\n");
         fgets(tf.email,40,stdin);
@@ -180,24 +180,27 @@ int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
     fseek(ff,0,SEEK_SET);
     fseek(fd,0,SEEK_SET);
 
-    while(fread(&tf,sizeof(tf),1,ff) == 1){
-        if(strcmp(mat,tf.matricula) == 1){
+    while(fread(&tf,sizeof(tf),1,ff)){
+        if(strcmp(mat,tf.matricula) == 0){
             while(fread(&td,sizeof(td),1,fd) == 1)
                 if(tf.id_depatamento == td.id)
                     printf("%s",td.nome);
             printf("\nNome: %s\nMatrícula: %s\nID: %li\nData de Nascimento: %s\nCPF: %s\nID Departamento: %li\
-                   \nSalário: %f\nRua: %s\nBairro: %s\nNúmero: %d\nComplemento: %s\nCidade: %s\nUF: %s\nCEP: %s\nEMAIL: %s",tf.nome,tf.matricula,tf.id,tf.dataNascimento,tf.CPF,td.id,tf.salario,tf.rua,tf.bairro,tf.Numero,tf.complemento,tf.cidade,
+                   \nSalário: %f\nRua: %s\nBairro: %s\nNúmero: %d\nComplemento: %s\nCidade: %s\nUF: %s\nCEP: %s\nEMAIL: %s\n",tf.nome,tf.matricula,tf.id,tf.dataNascimento,tf.CPF,td.id,tf.salario,tf.rua,tf.bairro,tf.Numero,tf.complemento,tf.cidade,
                    tf.UF,tf.CEP,tf.email);
             break;
         }
     }
+    system("pause");
 
-    ///return -1;
+    //return -1;
 }
 
 void salvaDadosFunc(FILE *f, TFuncionario tf){
     fseek(f,0,SEEK_END);
     fwrite(&tf,sizeof(tf),1,f);
+
+    fflush(f);
 }
 
 int gerarFolhaPagamento(FILE *ff){
@@ -242,7 +245,7 @@ int verificaMatricula(FILE *ff,char matricula[]){
     TFuncionario tf;
 
     while(fread(&tf,sizeof(tf),1,ff) == 1){
-        if(strcmp(tf.matricula,matricula) == 1)
+        if(strcmp(tf.matricula,matricula) == 0)
             return 0;
     }
     return 1;
