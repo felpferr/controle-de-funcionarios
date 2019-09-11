@@ -227,7 +227,7 @@ int telaListagens(FILE *ff, FILE *fd, FILE *fhs, FILE *fhd, FILE *fhf){
 
             case 3:
                 opcao = l_Funcionarios(ff);
-                limpaTela();
+               // limpaTela();
                 break;
 
             case 4:

@@ -17,14 +17,13 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
     do{
         limpaTela();
 
-        getMatricula(tf.matricula);
-        removeBarraN(tf.matricula);
-        if(verificaMatricula(ff,tf.matricula) == 0)
-            do{
-                printf("\nNúmero de matrícula repetido.\n");
-                getMatricula(tf.matricula);
-                removeBarraN(tf.matricula);
-            }while(verificaMatricula(ff,tf.matricula) == 0);
+        //getMatricula(tf.matricula);
+        //removeBarraN(tf.matricula);
+
+        do{
+            getMatricula(tf.matricula);
+            removeBarraN(tf.matricula);
+        }while(verificaMatricula(ff,tf.matricula) == 0);
 
         /*Garante que o campo nome do arquivo de funcionário não seja vazio.*/
         do{
@@ -50,7 +49,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
             setbuf(stdin,NULL);
             promptUniversal();
             printf("\nAno: ");
-            fgets(g.ano,5,stdin);
+            fgets(g.ano,6,stdin);
             setbuf(stdin,NULL);
 
             sprintf(tf.dataNascimento,"%s/%s/%s",g.dia,g.mes,g.ano);
@@ -243,7 +242,8 @@ void getMatricula(char matricula[]){
 ///Verifica se a matrícula fornecida é válida. Se for válida é retornado 1 senão é retornado 0.
 int verificaMatricula(FILE *ff,char matricula[]){
     TFuncionario tf;
-
+    fseek(ff, 0, SEEK_SET);
+    printf("Aquii");
     while(fread(&tf,sizeof(tf),1,ff) == 1){
         if(strcmp(tf.matricula,matricula) == 0)
             return 0;

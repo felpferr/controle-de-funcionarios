@@ -40,8 +40,8 @@ int pesquisaMat(char mat[], FILE *arq){
 }
 
 ///Gera um valor de ID automaticamente para departamento e funcionário.
-int geraID(long id){
-    return id ++;
+long geraID(long id){
+    return ++id;
 }
 
 /*Essa função garante que o programa não reinicie a contagem de ID's do zero sempre que for executado.
@@ -50,23 +50,19 @@ int geraID(long id){
 long verificaUltimoID(FILE *f,int m/*usado para indicar qual arquivo em que será buscado o ID.*/){
     TFuncionario tf;
     TDepartamento td;
-    if(m == 1){
-        if(arquivoVazio(f) == 0)
-            return 0;
-        fseek(f,-sizeof(tf),SEEK_END);
-        fread(&tf,sizeof(tf),1,f);
-        return tf.id;
+    long contador = 0;
+    fseek(f,1,SEEK_SET);
+    if(m==1){
+        while(fread(&tf, sizeof(tf), 1,f) == 1)
+            contador++;
     }
-    else{
-        if(arquivoVazio(f) == 0)
-            return 0;
-        fseek(f,-sizeof(td),SEEK_END);
-        fread(&td,sizeof(td),1,f);
-        return tf.id;
-    }
+    else
+        while(fread(&td, sizeof(td), 1,f))
+            contador++;
+    return contador;
 }
 
-///Verificar se essa função funciona depois.
+///Verificar se essa função funciona depois.(não funciona)
 int validaData(char data[]){
     char token[11];
     unsigned short int dia,mes,ano;

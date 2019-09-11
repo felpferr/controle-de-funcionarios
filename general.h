@@ -14,7 +14,7 @@ void limpaTela();
 int openFile(FILE *,char [],char []);
 int removeBarraN(char []);
 int pesquisaMat(char [],FILE *);
-int geraID(long);
+long geraID(long);
 long verificaUltimoID(FILE *,int);
 
 ///VERIFICAR SE FUNCIONA...

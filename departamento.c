@@ -51,11 +51,9 @@ int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
                 }while(sizeof(ramal) == 0);
             }
         }while(verificaRamal(ramal) == 0);
-
-        td.Ramal = (int)ramal;
-
+        td.Ramal = atoi(ramal);
         if(arquivoVazio(ff) == 0){
-            ;
+            td.id_gerente = 0;
         }
         else{
             setbuf(stdin,NULL);
@@ -186,8 +184,9 @@ int verificaRamal(char ramal[]){
 
     for(i = 0; i < strlen(ramal)/*<-tamanho da string ramal*/;i++){
         ///iRamal[i] = ramal[i];
-        if(isalpha(ramal[i]) == 1)///Se existir um caractere alfabético na string é retornado 0.
+        if(isalpha(ramal[i]) != 0){///Se existir um caractere alfabético na string é retornado 0.
             return 0;
+        }
         ///Verificando se o caractere não é especial pois a função isalpha() retorna o mesmo valor para números e caracteres especiais.
         if(isalnum(ramal[i]) == 0)///Se existir um caractere especial na string é retornado 0.
             return 0;
