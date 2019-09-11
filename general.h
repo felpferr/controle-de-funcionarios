@@ -26,6 +26,8 @@ int coletaOpcao();
 int arquivoVazio(FILE *);
 long buscaId(FILE *,int ,long );
 void promptUniversal();
-void msg01();
+int msg01();
+int msg02();
+int msg03();
 
 #endif // GENERAL_H_INCLUDED

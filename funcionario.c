@@ -16,13 +16,12 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
     do{
         limpaTela();
 
-        msg01();
-
         getMatricula(tf.matricula);
         if(verificaMatricula(ff,tf.matricula) == 0)
             do{
-                printf("\nNúmero de matrícula repetido.");
+                printf("\nNúmero de matrícula repetido.\n");
                 getMatricula(tf.matricula);
+                removeBarraN(tf.matricula);
             }while(verificaMatricula(ff,tf.matricula) == 0);
 
         /*Garante que o campo nome do arquivo de funcionário não seja vazio.*/
@@ -69,7 +68,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
           cadastrado não é obrigatório registrar os funcionários  em  um departamento.
         */
         if(arquivoVazio(fd) == 0){
-            continue;
+            ;
         }
         else{
             promptUniversal();
@@ -86,7 +85,8 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
 
         do{
             setbuf(stdin,NULL);
-            printf("Forneça o salário do funcionário:\n");
+            promptUniversal();
+            printf("\nForneça o salário do funcionário:\n");
             scanf("%f",&tf.salario);
             if(tf.salario < 0.2f)
                 printf("\nValor Inválido.");
@@ -95,10 +95,13 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         hs.salario = tf.salario;
 
         setbuf(stdin,NULL);
+        promptUniversal();
         printf("\nForneça a rua:\n");
         fgets(tf.rua,40,stdin);
         removeBarraN(tf.rua);
 
+        setbuf(stdin,NULL);
+        promptUniversal();
         setbuf(stdin,NULL);
         printf("\nForneça o bairro:\n");
         fgets(tf.bairro,30,stdin);
@@ -113,25 +116,34 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         }while(tf.Numero < 0);
 
         setbuf(stdin,NULL);
+        promptUniversal();
+        setbuf(stdin,NULL);
         printf("\nForneça um complemento:\n");
         fgets(tf.complemento,30,stdin);
         removeBarraN(tf.complemento);
 
+        setbuf(stdin,NULL);
+        promptUniversal();
         setbuf(stdin,NULL);
         printf("\nForneça a cidade:\n");
         fgets(tf.cidade,40,stdin);
         removeBarraN(tf.cidade);
 
         setbuf(stdin,NULL);
+        promptUniversal();
         printf("\nForneça a UF:\n");
         fgets(tf.UF,3,stdin);
         removeBarraN(tf.UF);
 
         setbuf(stdin,NULL);
+        promptUniversal();
+        setbuf(stdin,NULL);
         printf("\nForneça o CEP:\n");
         fgets(tf.CEP,9,stdin);
         removeBarraN(tf.CEP);
 
+        setbuf(stdin,NULL);
+        promptUniversal();
         setbuf(stdin,NULL);
         printf("\nForneça um email:\n");
         fgets(tf.email,40,stdin);
@@ -180,7 +192,7 @@ int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
         }
     }
 
-    return -1;
+    ///return -1;
 }
 
 void salvaDadosFunc(FILE *f, TFuncionario tf){
@@ -235,3 +247,4 @@ int verificaMatricula(FILE *ff,char matricula[]){
     }
     return 1;
 }
+

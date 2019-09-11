@@ -142,10 +142,13 @@ int validaCPF(char cpf[]){
 
 int coletaOpcao(){
     int op;
+
+    promptUniversal();
     printf("\nDeseja continuar?\n1-Sim\n2-Não");
     scanf("%d",&op);
     if(op < 1 || op > 2)
         do{
+            promptUniversal();
             printf("\nOpção inválida. Forneça uma correta:");
             scanf("%d",&op);
         }while(op < 1 || op > 2);
@@ -154,7 +157,7 @@ int coletaOpcao(){
 
 int arquivoVazio(FILE *f){
     fseek(f,0,SEEK_END);
-    if(ftell(f)-1 == 0)
+    if(ftell(f) == 0)
         return 0;
     else
         return 1;
@@ -188,6 +191,17 @@ void promptUniversal(){
     setbuf(stdin,NULL);
 }
 
-void msg01(){
+int msg01(){
     printf("Campos precedidos por * são obrigatórios!!\n\n");
+    return 1;
+}
+
+int msg02(){
+    printf("\nNão há funcionários cadastrados no momento.");
+    return 1;
+}
+
+int msg03(){
+    printf("\nNão há departamentos cadastrados no momento.");
+    return 1;
 }

@@ -52,18 +52,20 @@ int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
             }
         }while(verificaRamal(ramal) == 0);
 
-        td.Ramal = (unsigned short int)ramal;
+        td.Ramal = (int)ramal;
 
         if(arquivoVazio(ff) == 0){
             continue;
         }
         else{
             setbuf(stdin,NULL);
+            promptUniversal();
             printf("\nForneça o ID de um funcionário para designá-lo como gerente deste departamento:\n");
             scanf("%li",&td.id_gerente);
             if(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0){
                 do{
                     setbuf(stdin,NULL);
+                    promptUniversal();
                     printf("\nID inválido forneça um correto:");
                     scanf("%li",&td.id_gerente);
                 }while(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0);

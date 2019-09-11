@@ -9,6 +9,7 @@
 void inicio();
 int telaCadastros(FILE *,FILE *,FILE *,FILE *,FILE*, TDepartamento *, TFuncionario *);
 int telaAlteracoes(FILE *,FILE *,FILE *,FILE *,FILE *, TDepartamento *, TFuncionario *);
-int telaConsulta(FILE *, FILE *,FILE *, TDepartamento *, TFuncionario *, HistoricoDepartamento *, HistoricoFuncionario *, HistoricoSalario *);
+int telaConsulta(FILE *, FILE *,FILE *,FILE *, FILE *, TDepartamento *, TFuncionario *, HistoricoDepartamento *, HistoricoFuncionario *, HistoricoSalario *);
+int telaListagens(FILE *, FILE *, FILE *, FILE *, FILE *);
 
 #endif // TELAS_H_INCLUDED
