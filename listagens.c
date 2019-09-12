@@ -13,9 +13,10 @@ int l_Funcionarios(FILE *ff){
     }
     fseek(ff, 0, SEEK_SET);
     while(fread(&tf,sizeof(tf),1,ff)){
+        msg04();
         printf("--------------------------------------------------------------------------------------------");
         printf("\nNome: %s\nMatrícula: %s\nID: %li\nData de Nascimento: %s\nCPF: %s\nID Departamento: %li\
-                \nSalário: %f\nRua: %s\nBairro: %s\nNúmero: %d\nComplemento: %s\nCidade: %s\nUF: %s\nCEP: %s\nEMAIL: %s\n\n",
+                \nSalário: %.2f\nRua: %s\nBairro: %s\nNúmero: %d\nComplemento: %s\nCidade: %s\nUF: %s\nCEP: %s\nEMAIL: %s\n\n",
                 tf.nome,tf.matricula,tf.id,tf.dataNascimento,tf.CPF,tf.id,tf.salario,tf.rua,tf.bairro,tf.Numero,tf.complemento,tf.cidade,
                 tf.UF,tf.CEP,tf.email);
     }
@@ -29,8 +30,9 @@ int l_Departamentos(FILE *fd){
         return msg03();
     fseek(fd,0,SEEK_SET);
     while(fread(&td,sizeof(td),1,fd)){
+        msg05();
         printf("--------------------------------------------------------------------------------------------");
-        printf("\nNome: %s\nSigla: %s\nID: %li\nID do Gerente: %li\nRamal: %hu\n",td.nome,td.sigla,td.id,td.id_gerente,td.Ramal);
+        printf("\nNome: %s\nSigla: %s\nID: %li\nID do Gerente: %li\nRamal: %hu\n\n",td.nome,td.sigla,td.id,td.id_gerente,td.Ramal);
     }
     return 1;
 }
@@ -40,10 +42,12 @@ int l_HistoricoSalario(FILE *fhs){
 
     if(arquivoVazio(fhs) == 0)
         return msg02();
+
     fseek(fhs,0,SEEK_SET);
     while(fread(&hs,sizeof(hs),1,fhs) == 1){
+        msg07();
         printf("--------------------------------------------------------------------------------------------");
-        printf("\nID do Funcionário: %li\nSalário: %f\nMês: %hu\nAno: %hu\n",hs.id_funcionario,hs.salario,hs.mes,hs.ano);
+        printf("\nID do Funcionário: %li\nSalário: %.2f\nMês: %hu\nAno: %hu\n\n",hs.id_funcionario,hs.salario,hs.mes,hs.ano);
     }
     return 1;
 }
@@ -56,7 +60,7 @@ int l_HistoricoDepartamento(FILE *fhd){
     fseek(fhd,0,SEEK_SET);
     while(fread(&hd,sizeof(hd),1,fhd) == 1){
         printf("--------------------------------------------------------------------------------------------");
-        printf("\nID do departamento: %li\nID do Gerente: %li\nData: %s\n",hd.id_departamento,hd.id_gerente,hd.data);
+        printf("\nID do departamento: %li\nID do Gerente: %li\nData: %s\n\n",hd.id_departamento,hd.id_gerente,hd.data);
     }
     return 1;
 }
@@ -68,8 +72,9 @@ int l_HistoricoFuncionario(FILE *fhf){
         return msg02();
     fseek(fhf,0,SEEK_SET);
     while(fread(&hf,sizeof(hf),1,fhf) == 1){
+        msg06();
         printf("--------------------------------------------------------------------------------------------");
-        printf("\nID do Funcionário: %li\nID do Departamento: %li\nData: %s\n",hf.id_funcionario,hf.id_departamento,hf.data);
+        printf("\nID do Funcionário: %li\nID do Departamento: %li\nData: %s\n\n",hf.id_funcionario,hf.id_departamento,hf.data);
     }
     return 1;
 }

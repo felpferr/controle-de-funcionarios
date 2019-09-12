@@ -32,5 +32,7 @@ int msg03();
 int msg04();
 int msg05();
 int msg06();
+int msg07();
+int msg08();
 
 #endif // GENERAL_H_INCLUDED

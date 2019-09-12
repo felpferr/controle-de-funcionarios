@@ -51,7 +51,7 @@ long verificaUltimoID(FILE *f,int m/*usado para indicar qual arquivo em que será
     TFuncionario tf;
     TDepartamento td;
     long contador = 0;
-    fseek(f,1,SEEK_SET);
+    fseek(f,0,SEEK_SET);
     if(m==1){
         while(fread(&tf, sizeof(tf), 1,f) == 1)
             contador++;
@@ -207,3 +207,12 @@ int msg06(){
     return 1;
 }
 
+int msg07(){
+    printf("\n--------------- Histórico dos salários dos funcionários da empresa. ---------------");
+    return 1;
+}
+
+int msg08(){
+    printf("\n--------------- Histórico dos departamentos da empresa. ---------------");
+    return 1;
+}

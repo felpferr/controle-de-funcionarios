@@ -129,22 +129,18 @@ int telaAlteracoes(FILE *ff,FILE *fd,FILE *fhd,FILE *fhs,FILE *fhf, TDepartament
         switch(opcao){
             case 1:
                 opcao = alterarFuncionario(ff,fd,fhf,fhs);
-                limpaTela();
                 break;
 
             case 2:
                 opcao = alterarSalario(ff,fhs);
-                limpaTela();
                 break;
 
             case 3:
                 opcao = alterarDepartamentoFunc(ff,fd,fhf);
-                limpaTela();
                 break;
 
             case 4:
                 opcao = alterarGerenteDep(ff,fd,fhd);
-                limpaTela();
                 break;
 
             case 5:
@@ -176,17 +172,14 @@ int telaConsulta(FILE *ff, FILE *fd, FILE *fhs,FILE *fhd, FILE *fhf, TDepartamen
 
             case 2:
                 opcao = gerarFolhaPagamento(ff);
-                limpaTela();
                 break;
 
             case 3:
                 opcao = geraHistoricoPeriodo(ff,fhs);
-                limpaTela();
                 break;
 
             case 4:
                 opcao = relatorioFuncionario(ff,fd);
-                limpaTela();
                 break;
 
             case 5:
