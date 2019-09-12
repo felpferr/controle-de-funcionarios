@@ -29,5 +29,8 @@ void promptUniversal();
 int msg01();
 int msg02();
 int msg03();
+int msg04();
+int msg05();
+int msg06();
 
 #endif // GENERAL_H_INCLUDED

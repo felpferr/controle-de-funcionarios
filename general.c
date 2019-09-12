@@ -57,7 +57,7 @@ long verificaUltimoID(FILE *f,int m/*usado para indicar qual arquivo em que será
             contador++;
     }
     else
-        while(fread(&td, sizeof(td), 1,f))
+        while(fread(&td, sizeof(td), 1,f) == 1)
             contador++;
     return contador;
 }
@@ -191,3 +191,19 @@ int msg03(){
     printf("\nNão há departamentos cadastrados no momento.");
     return 1;
 }
+
+int msg04(){
+    printf("\n--------------- Dados dos funcionários da empresa. ---------------");
+    return 1;
+}
+
+int msg05(){
+    printf("\n--------------- Dados dos departamentos da empresa. ---------------");
+    return 1;
+}
+
+int msg06(){
+    printf("\n--------------- Histórico dos funcionários da empresa. ---------------");
+    return 1;
+}
+

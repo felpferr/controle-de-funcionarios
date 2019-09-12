@@ -17,9 +17,6 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
     do{
         limpaTela();
 
-        //getMatricula(tf.matricula);
-        //removeBarraN(tf.matricula);
-
         do{
             getMatricula(tf.matricula);
             removeBarraN(tf.matricula);
@@ -179,7 +176,10 @@ int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
     fseek(ff,0,SEEK_SET);
     fseek(fd,0,SEEK_SET);
 
+    removeBarraN(mat);
+
     while(fread(&tf,sizeof(tf),1,ff)){
+        removeBarraN(tf.matricula);
         if(strcmp(mat,tf.matricula) == 0){
             while(fread(&td,sizeof(td),1,fd) == 1)
                 if(tf.id_depatamento == td.id)
@@ -190,16 +190,13 @@ int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
             break;
         }
     }
-    system("pause");
 
-    //return -1;
+    return -1;
 }
 
 void salvaDadosFunc(FILE *f, TFuncionario tf){
     fseek(f,0,SEEK_END);
     fwrite(&tf,sizeof(tf),1,f);
-
-    fflush(f);
 }
 
 int gerarFolhaPagamento(FILE *ff){
@@ -221,6 +218,7 @@ int gerarFolhaPagamento(FILE *ff){
         }while(pesquisaMat(mat,ff) == 0);
     }
 
+    fseek(ff,0,SEEK_SET);
     ///Buscando o registro equivalente a matrícula fornecida para mostrar os dados na tela.
     while(fread(&tf,sizeof(tf),1,ff) == 1){
         if(strcmp(mat,tf.matricula) == 1){

@@ -171,7 +171,7 @@ int telaConsulta(FILE *ff, FILE *fd, FILE *fhs,FILE *fhd, FILE *fhf, TDepartamen
         switch(opcao){
             case 1:
                 opcao = telaListagens(ff,fd,fhs,fhd,fhf);
-                limpaTela();
+                //limpaTela();
                 break;
 
             case 2:
@@ -217,12 +217,10 @@ int telaListagens(FILE *ff, FILE *fd, FILE *fhs, FILE *fhd, FILE *fhf){
             case 1:
                 getMatricula(mat);
                 opcao = consultaFuncionario(ff,fd,mat);
-                limpaTela();
                 break;
 
             case 2:
                 opcao = dadosDosGerentes(ff,fd);
-                limpaTela();
                 break;
 
             case 3:
@@ -232,22 +230,18 @@ int telaListagens(FILE *ff, FILE *fd, FILE *fhs, FILE *fhd, FILE *fhf){
 
             case 4:
                 opcao = l_Departamentos(fd);
-                limpaTela();
                 break;
 
             case 5:
                 opcao = l_HistoricoFuncionario(fhf);
-                limpaTela();
                 break;
 
             case 6:
                 opcao  = l_HistoricoDepartamento(fhd);
-                limpaTela();
                 break;
 
             case 7:
                 opcao = l_HistoricoSalario(fhs);
-                limpaTela();
                 break;
 
             case 8:
