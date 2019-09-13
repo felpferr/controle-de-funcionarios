@@ -11,8 +11,8 @@ int l_Funcionarios(FILE *ff){
     if(arquivoVazio(ff) == 0){
         return msg02();
     }
-    fseek(ff, 0, SEEK_SET);
-    while(fread(&tf,sizeof(tf),1,ff)){
+    fseek(ff,0,SEEK_SET);
+    while(fread(&tf,sizeof(tf),1,ff) == 1){
         msg04();
         printf("--------------------------------------------------------------------------------------------");
         printf("\nNome: %s\nMatrícula: %s\nID: %li\nData de Nascimento: %s\nCPF: %s\nID Departamento: %li\
@@ -59,6 +59,7 @@ int l_HistoricoDepartamento(FILE *fhd){
         return msg03();
     fseek(fhd,0,SEEK_SET);
     while(fread(&hd,sizeof(hd),1,fhd) == 1){
+        msg08();
         printf("--------------------------------------------------------------------------------------------");
         printf("\nID do departamento: %li\nID do Gerente: %li\nData: %s\n\n",hd.id_departamento,hd.id_gerente,hd.data);
     }
@@ -70,6 +71,7 @@ int l_HistoricoFuncionario(FILE *fhf){
 
     if(arquivoVazio(fhf) == 0)
         return msg02();
+
     fseek(fhf,0,SEEK_SET);
     while(fread(&hf,sizeof(hf),1,fhf) == 1){
         msg06();

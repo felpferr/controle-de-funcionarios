@@ -11,7 +11,6 @@ typedef struct{
 
 void sair();
 void limpaTela();
-int openFile(FILE *,char [],char []);
 int removeBarraN(char []);
 int pesquisaMat(char [],FILE *);
 long geraID(long);

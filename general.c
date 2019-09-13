@@ -12,16 +12,6 @@ void limpaTela(){
     system("cls || clear");
 }
 
-int openFile(FILE *arq,char nome[], char MODO[]){
-    arq = fopen(nome,MODO);
-    if(!arq){
-        /*printf("\nErro na abertura do arquivo. Com %s.",&MODO);*/
-        return 0;
-    }
-    else
-        return 1;
-}
-
 int removeBarraN(char palavra[]){
     if(palavra[strlen(palavra)-1] == '\n')
        palavra[strlen(palavra)-1] = '\0';
@@ -193,26 +183,26 @@ int msg03(){
 }
 
 int msg04(){
-    printf("\n--------------- Dados dos funcionários da empresa. ---------------");
+    printf("\n----------------------------  Dados dos funcionários da empresa ----------------------------\n");
     return 1;
 }
 
 int msg05(){
-    printf("\n--------------- Dados dos departamentos da empresa. ---------------");
+    printf("\n---------------------------- Dados dos departamentos da empresa ----------------------------\n");
     return 1;
 }
 
 int msg06(){
-    printf("\n--------------- Histórico dos funcionários da empresa. ---------------");
+    printf("\n--------------------------- Histórico dos funcionários da empresa --------------------------\n");
     return 1;
 }
 
 int msg07(){
-    printf("\n--------------- Histórico dos salários dos funcionários da empresa. ---------------");
+    printf("\n------------------- Histórico dos salários dos funcionários da empresa. --------------------\n");
     return 1;
 }
 
 int msg08(){
-    printf("\n--------------- Histórico dos departamentos da empresa. ---------------");
+    printf("\n-------------------------- Histórico dos departamentos da empresa --------------------------\n");
     return 1;
 }

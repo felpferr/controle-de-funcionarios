@@ -12,7 +12,7 @@ int geraHistoricoPeriodo(FILE *ff, FILE *fhs){
     char mat[10],dInicial[11]/*Usado para verificar se é uma data válida.*/,dFinal[11]/*Usado para verificar se é uma data válida.*/;
 
     if(arquivoVazio(ff) == 0){
-        printf("\nNão há funcionários cadastrados no momento.");
+        printf("\nNão há funcionários cadastrados no momento.\n");
         return -1;
     }
 
@@ -107,7 +107,7 @@ int geraHistoricoPeriodo(FILE *ff, FILE *fhs){
 
         while(fread(&hs,sizeof(hs),1,fhs) == 1){
             if(hs.id_funcionario == tf.id){
-                continue;
+                ;
             }
         }
 

@@ -13,6 +13,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
     geral g;
     struct tm *data;
     time_t dataAtual = time(NULL);
+    char uf[4];
 
     do{
         limpaTela();
@@ -32,8 +33,6 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         }while(strlen(tf.nome) == 0);
 
         tf.id = geraID(verificaUltimoID(ff,1));
-        hf.id_funcionario = tf.id;
-        hs.id_funcionario = tf.id;
 
         do{
             setbuf(stdin,NULL);
@@ -43,12 +42,13 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
             setbuf(stdin,NULL);
 
             setbuf(stdin,NULL);
-            setbuf(stdin,NULL);
+            promptUniversal();
             printf("\nMês: ");
             fgets(g.mes,3,stdin);
             setbuf(stdin,NULL);
 
             setbuf(stdin,NULL);
+            promptUniversal();
             printf("\nAno: ");
             fgets(g.ano,6,stdin);
             setbuf(stdin,NULL);
@@ -71,7 +71,7 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
           cadastrado não é obrigatório registrar os funcionários  em  um departamento.
         */
         if(arquivoVazio(fd) == 0){
-            ;
+            tf.id_depatamento = 0;
         }
         else{
             printf("\nForneça o ID de um departamento para adicionar este funcionário ao departamento:\n");
@@ -133,9 +133,10 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
 
         setbuf(stdin,NULL);
         printf("\nForneça a UF:\n");
-        fgets(tf.UF,3,stdin);
+        fgets(uf,4,stdin);
         setbuf(stdin,NULL);
-        removeBarraN(tf.UF);
+        removeBarraN(uf);
+        strcpy(tf.UF,uf);
 
         setbuf(stdin,NULL);
         printf("\nForneça o CEP:\n");
@@ -143,7 +144,6 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         setbuf(stdin,NULL);
         removeBarraN(tf.CEP);
 
-        setbuf(stdin,NULL);
         setbuf(stdin,NULL);
         printf("\nForneça um email:\n");
         fgets(tf.email,40,stdin);
@@ -153,11 +153,14 @@ int cadastroFuncionario(FILE *ff,FILE *fd,FILE *fhf,FILE *fhs){
         data = localtime(&dataAtual);
 
         ///Adicionando a data do sistema no registro do histórico de salário.
-        hs.mes = data->tm_mon++;
-        hs.ano = data->tm_year;
+        hs.mes = ++data->tm_mon;
+        hs.ano = data->tm_year+1900;
 
         ///Adicionando a data do sistema no registro do histórico de funcionário.
-        sprintf(hf.data,"%d/%d/%d",data->tm_mday,data->tm_mon++,data->tm_year);
+        sprintf(hf.data,"%d/%d/%d",data->tm_mday,++data->tm_mon,data->tm_year+1900);
+
+        hf.id_funcionario = tf.id;
+        hs.id_funcionario = tf.id;
 
         salvaHistoricoSalario(fhs,hs);
         salvaHistoricoFunc(fhf,hf);
@@ -172,12 +175,6 @@ int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
     TFuncionario tf;
     TDepartamento td;
 
-    if(arquivoVazio(ff) == 0){
-        printf("\nNão há funcionários cadastrados no momento.");
-        return -1;
-    }
-
-
     fseek(ff,0,SEEK_SET);
     fseek(fd,0,SEEK_SET);
 
@@ -188,7 +185,7 @@ int consultaFuncionario(FILE *ff,FILE *fd, char mat[]){
         if(strcmp(mat,tf.matricula) == 0){
             while(fread(&td,sizeof(td),1,fd) == 1)
                 if(tf.id_depatamento == td.id)
-                    printf("%s",td.nome);
+                    printf("Nome do departamento: %s",td.nome);
             printf("\nNome: %s\nMatrícula: %s\nID: %li\nData de Nascimento: %s\nCPF: %s\nID Departamento: %li\
                    \nSalário: %.2f\nRua: %s\nBairro: %s\nNúmero: %d\nComplemento: %s\nCidade: %s\nUF: %s\nCEP: %s\nEMAIL: %s\n",tf.nome,tf.matricula,tf.id,tf.dataNascimento,tf.CPF,td.id,tf.salario,tf.rua,tf.bairro,tf.Numero,tf.complemento,tf.cidade,
                    tf.UF,tf.CEP,tf.email);
@@ -209,25 +206,26 @@ int gerarFolhaPagamento(FILE *ff){
     char mat[10];
 
     if(arquivoVazio(ff) == 0){
-        printf("\nNão há nenhum funcionário cadastrado no momento.");
-        return 0;
+        printf("\nNão há nenhum funcionário cadastrado no momento.\n");
+        return -1;
     }
 
     getMatricula(mat);
+    removeBarraN(mat);
 
     ///Verificando se o número de matrícula fornecido existe.
-    if(verificaMatricula(ff,mat) == 0){
+    if(verificaMatricula(ff,mat) == 1){
         do{
             printf("\nNúmero de matrícula inexistente.Forneça um válido:\n");
             getMatricula(mat);
-        }while(verificaMatricula(ff,mat) == 0);
+        }while(verificaMatricula(ff,mat) == 1);
     }
 
     fseek(ff,0,SEEK_SET);
     ///Buscando o registro equivalente a matrícula fornecida para mostrar os dados na tela.
     while(fread(&tf,sizeof(tf),1,ff) == 1){
-        if(strcmp(mat,tf.matricula) == 1){
-            printf("\nDetalhes da Folha de Pagamento:");
+        if(strcmp(mat,tf.matricula) == 0){
+            printf("\nDetalhes da Folha de Pagamento:\n");
             printf("\nNúmero de Matrícula: %s\tNome do Funcionário: %s\tSalário: %.2f\n\n",tf.matricula,tf.nome,tf.salario);
             return -1;
         }

@@ -18,7 +18,6 @@ int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
         msg01();
 
         td.id = geraID(verificaUltimoID(fd,2));
-        printf("%li",td.id);
         hd.id_departamento = td.id;
 
         setbuf(stdin,NULL);
@@ -64,18 +63,18 @@ int cadastroDepartamento(FILE *ff,FILE *fd,FILE *fhd){
             setbuf(stdin,NULL);
             printf("\nForneça o ID de um funcionário para designá-lo como gerente deste departamento:\n");
             scanf("%li",&td.id_gerente);
-            if(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0){
+            if(td.id_gerente <= 0 || buscaId(ff,1,td.id_gerente) == 0){
                 do{
                     setbuf(stdin,NULL);
                     printf("\nID inválido forneça um correto:");
                     scanf("%li",&td.id_gerente);
-                }while(td.id_gerente <= 0 || buscaId(fd,2,td.id_gerente) == 0);
+                }while(td.id_gerente <= 0 || buscaId(ff,1,td.id_gerente) == 0);
             }
         }
         hd.id_gerente = td.id_gerente;
 
         data = localtime(&dataAtual);
-        sprintf(hd.data,"%d/%d/%d",data->tm_mday,data->tm_mon++,data->tm_year);///VERIFICAR DEPOIS SE A COERÇÃO DE TIPO NÃO ESTÁ GERANDO INCONSISTÊNCIA
+        sprintf(hd.data,"%d/%d/%d",data->tm_mday,++data->tm_mon,data->tm_year+1900);
 
         salvaHistoricoDep(fhd,hd);
         salvaDadosDep(td,fd);
@@ -96,7 +95,6 @@ int relatorioFuncionario(FILE *ff,FILE *fd){
     do{
         if(arquivoVazio(fd) == 0){
             printf("Não há departamentos cadastrados no momento.\n");
-            limpaTela();
             return 0;
         }
 
@@ -116,27 +114,30 @@ int relatorioFuncionario(FILE *ff,FILE *fd){
             }while(buscaId(fd,2,id) == 0);
         }
 
-        while(fread(&td,sizeof(td),1,fd) == 1){
-            if(td.id == id)
-                break;
-        }
+        fseek(fd,0,SEEK_SET);
 
-        printf("\n* Código do Departamento: %li\nNome: %s\n",td.id,td.nome);
-        printf("Matrícula\tNome\tSalario\n");
+        while(fread(&td,sizeof(td),1,fd) == 1){
+            if(td.id == id){
+                printf("\n* Código do Departamento: %li\nNome: %s\n",td.id,td.nome);
+                printf("\nMatrícula\t\t\t\tNome\t\t\t\t\tSalario\n");
+                break;
+            }
+        }
         while(fread(&tf,sizeof(tf),1,ff) == 1){
-            if(tf.id_depatamento == id){
-                printf("%s\t%s\t%.2f\n",tf.matricula,tf.nome,tf.salario);
+            if(tf.id_depatamento == id && tf.id_depatamento != 0){
+                printf("%s\t\t\t\t\t%s\t\t\t\t\t%.2f\n",tf.matricula,tf.nome,tf.salario);
                 soma += tf.salario;
             }
         }
         printf("\nTotal da folha de pagamento: %.2f",soma);
     }while(coletaOpcao() == 1);
-
+    limpaTela();
     return -1;
 }
 
 int dadosDosGerentes(FILE *ff,FILE *fd){
     TFuncionario tf;
+    TDepartamento td;
     long id;
 
     fseek(ff,0,SEEK_SET);
@@ -144,7 +145,7 @@ int dadosDosGerentes(FILE *ff,FILE *fd){
 
     do{
         if(arquivoVazio(fd) == 0){
-            printf("Não há departamentos cadastrados no momento.");
+            printf("Não há departamentos cadastrados no momento.\n");
             return -1;
         }
 
@@ -164,12 +165,18 @@ int dadosDosGerentes(FILE *ff,FILE *fd){
             }while(buscaId(fd,2,id) == 0);
         }
 
-        while(fread(&tf,sizeof(tf),1,ff) == 1){
-            if(tf.id_depatamento == id){
-                printf("\n\nNome: %s\tCPF: %s\tID: %li\tMatrícula: %s\nSalário: %.2f\tEmail: %s\n\n",
-                tf.nome,tf.CPF,tf.id,tf.matricula,tf.salario,tf.email);
+        while(fread(&td,sizeof(td),1,fd) == 1){
+            if(td.id == id){
+                while(fread(&tf,sizeof(tf),1,ff) == 1){
+                    if(tf.id_depatamento == id || tf.id == td.id_gerente){
+                        printf("\n\nNome: %s\tCPF: %s\tID: %li\tMatrícula: %s\nSalário: %.2f\tEmail: %s\n\n",
+                            tf.nome,tf.CPF,tf.id,tf.matricula,tf.salario,tf.email);
+                        break;
+                    }
+                }
             }
         }
+
 
     }while(coletaOpcao() == 1);
 

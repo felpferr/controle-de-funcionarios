@@ -18,7 +18,7 @@ int alterarFuncionario(FILE *ff, FILE *fd, FILE *fhf, FILE *fhs){
     geral g;
 
     if(arquivoVazio(ff) == 0){
-        printf("\nNão há funcionários cadastrados no momento.");
+        printf("\nNão há funcionários cadastrados no momento.\n");
         return -1;
     }
 
@@ -92,10 +92,9 @@ int alterarFuncionario(FILE *ff, FILE *fd, FILE *fhf, FILE *fhs){
           cadastrado não é obrigatório registrar os funcionários  em  um departamento.
         */
         if(arquivoVazio(fd) == 0){
-            ;
+            tf.id_depatamento = 0;
         }
         else{
-            promptUniversal();
             printf("\nForneça o ID de um departamento para adicionar este funcionário ao departamento:\n");
             scanf("%li",&tf.id_depatamento);
             setbuf(stdin,NULL);
@@ -172,11 +171,11 @@ int alterarFuncionario(FILE *ff, FILE *fd, FILE *fhf, FILE *fhs){
         removeBarraN(tf.email);
 
         ///Adicionando a data do sistema no registro do histórico de salário.
-        hs.mes = data->tm_mon++;
-        hs.ano = data->tm_year;
+        hs.mes = ++data->tm_mon;
+        hs.ano = data->tm_year+1900;
 
         ///Adicionando a data do sistema no registro do histórico de funcionário.
-        sprintf(hf.data,"%d/%d/%d",data->tm_mday,data->tm_mon++,data->tm_year);
+        sprintf(hf.data,"%d/%d/%d",data->tm_mday,++data->tm_mon,data->tm_year+1900);
 
         salvaHistoricoSalario(fhs,hs);
         salvaHistoricoFunc(fhf,hf);
@@ -205,17 +204,14 @@ int alterarSalario(FILE *ff,FILE *fhs){
 
     if(arquivoVazio(ff) == 0){
         limpaTela();
-        printf("\nNenhum há nenhum funcionário cadastrado no momento meu consagrado!!");
+        printf("\nNenhum há nenhum funcionário cadastrado no momento.\n");
         return 1;
     }
 
     getMatricula(mat);
     removeBarraN(mat);
 
-    printf("AQUI");
-
     if(pesquisaMat(mat,ff) == 0){
-        printf("AQUI");
         do{
             printf("\nNúmero de Matrícula inexistente.");
             getMatricula(mat);
@@ -223,14 +219,11 @@ int alterarSalario(FILE *ff,FILE *fhs){
         }while(pesquisaMat(mat,ff) == 0);
     }
 
-    printf("AQUI");
-
     fseek(ff,0,SEEK_SET);
     fseek(fhs,0,SEEK_SET);
 
     ///Buscando primeiramente no arquivo de funcionários o registro que possui a matrícula fornecida
     while(fread(&tf,sizeof(tf),1,ff) == 1){
-        printf("AQUI");
         removeBarraN(tf.matricula);
         if(strcmp(mat,tf.matricula) == 0){
             do{
@@ -246,13 +239,11 @@ int alterarSalario(FILE *ff,FILE *fhs){
         }
     }
 
-    printf("AQUI");
-
     hs.id_funcionario = tf.id;
     hs.salario = tf.salario;
 
-    hs.mes = data->tm_mon++;
-    hs.ano = data->tm_year;
+    hs.mes = ++data->tm_mon;
+    hs.ano = data->tm_year+1900;
 
     /*Salvando a alteração no arquivo de funcionários.
       OBS: Não é utilizada a função salvaDadosFunc pois ela salva novos registros no final do arquivo
@@ -272,20 +263,22 @@ int alterarDepartamentoFunc(FILE *ff,FILE *fd,FILE *fhf){
     struct tm *data;
     time_t dataAtual = time(NULL);
     char matricula[10];
+    int cont = 0;
 
     if(arquivoVazio(ff) == 0){
         limpaTela();
-        printf("\nNenhum há nenhum funcionário cadastrado no momento!!");
+        printf("\nNenhum há nenhum funcionário cadastrado no momento.\n");
         return 1;
     }
 
     if(arquivoVazio(fd) == 0){
         limpaTela();
-        printf("\nNão há departamentos cadastrados.");
+        printf("\nNão há departamentos cadastrados.\n");
         return 1;
     }
 
     do{
+        cont  = 0;
         limpaTela();
         getMatricula(matricula);
 
@@ -295,10 +288,14 @@ int alterarDepartamentoFunc(FILE *ff,FILE *fd,FILE *fhf){
                 getMatricula(matricula);
             }while(verificaMatricula(ff,matricula) == 0);
 
+       fseek(ff,0,SEEK_SET);
+       fseek(fd,0,SEEK_SET);
+       fseek(fhf,0,SEEK_SET);
+
         ///Posicionando o arquivo na posição referente ao registro do funcionário para não criar réplicas de dados.
         while(fread(&tf,sizeof(tf),1,ff) == 1){
+            cont++;
             if(strcmp(matricula,tf.matricula) == 0){
-                fseek(ff,0,SEEK_CUR);
                 break;
             }
         }
@@ -307,7 +304,7 @@ int alterarDepartamentoFunc(FILE *ff,FILE *fd,FILE *fhf){
         scanf("%li",&tf.id_depatamento);
         if(buscaId(fd,2,tf.id_depatamento) == 0){
             do{
-                printf("\nID de departamento inexistente.Por favor meu consagrado, forneça um válido:\n");
+                printf("\nID de departamento inexistente.Por favor forneça um válido:\n");
                 scanf("%li",&tf.id_depatamento);
             }while(buscaId(fd,2,tf.id_depatamento) == 0);
         }
@@ -317,12 +314,13 @@ int alterarDepartamentoFunc(FILE *ff,FILE *fd,FILE *fhf){
         ///Adicionando os novos dados deste funcionário em um registro.
         hf.id_funcionario = tf.id;
         hf.id_departamento = tf.id_depatamento;
-        sprintf(hf.data,"%d/%d/%d",data->tm_mday,data->tm_mon++,data->tm_year);///VERIFICAR DEPOIS SE A COERÇÃO DE TIPO NÃO ESTÁ GERANDO INCONSISTÊNCIA
+        sprintf(hf.data,"%d/%d/%d",data->tm_mday,++data->tm_mon,data->tm_year+1900);
 
         /*Salvando a alteração no arquivo de funcionários.
           OBS: Não é utilizada a função salvaDadosFunc pois ela salva novos registros no final do arquivo
           (criando réplicas dos dados de um funcionário), neste caso é sobrescrito  o  registro atual  do
           arquivo pelo registro recém modificado.*/
+        fseek(ff,sizeof(tf)*cont,SEEK_SET);
         fwrite(&tf,sizeof(tf),1,ff);
 
         ///Salvando a alteração no arquivo de histórico do funcionário.
@@ -341,7 +339,7 @@ int alterarGerenteDep(FILE *ff,FILE *fd, FILE *fhd){
 
 
     if(arquivoVazio(fd) == 0){
-        printf("Não há departamentos cadastrados no momento!!");
+        printf("Não há departamentos cadastrados no momento.\n");
         return 1;
     }
 
@@ -381,7 +379,7 @@ int alterarGerenteDep(FILE *ff,FILE *fd, FILE *fhd){
         hd.id_gerente = novoId;
         hd.id_departamento = td.id;
         data = localtime(&dataAtual);
-        sprintf(hd.data,"%d/%d/%d",data->tm_mday,data->tm_mon++,data->tm_year);///VERIFICAR DEPOIS SE A COERÇÃO DE TIPO NÃO ESTÁ GERANDO INCONSISTÊNCIA
+        sprintf(hd.data,"%d/%d/%d",data->tm_mday,++data->tm_mon,data->tm_year+1900);
 
         ///Salvando a alteração no histórico do departamento.
         salvaHistoricoDep(fhd,hd);

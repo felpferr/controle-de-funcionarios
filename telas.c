@@ -167,7 +167,6 @@ int telaConsulta(FILE *ff, FILE *fd, FILE *fhs,FILE *fhd, FILE *fhf, TDepartamen
         switch(opcao){
             case 1:
                 opcao = telaListagens(ff,fd,fhs,fhd,fhf);
-                //limpaTela();
                 break;
 
             case 2:
@@ -194,23 +193,29 @@ int telaConsulta(FILE *ff, FILE *fd, FILE *fhs,FILE *fhd, FILE *fhf, TDepartamen
     return 0;/*É retornado um valor que faça o loop(do/while) da função inicio() seja reiniciado.*/
 }
 
-
 int telaListagens(FILE *ff, FILE *fd, FILE *fhs, FILE *fhd, FILE *fhf){
     unsigned short int opcao;
     char mat[10];
 
+    limpaTela();
     do{
-        limpaTela();
-        printf("Escolha uma das opções abaixo:\n1-Consultar os Dados de Um Funcionário.\n2-Consultar Dados dos Gerentes.\n3-Listar Todos os Funcionários.\
+        printf("\n\nEscolha uma das opções abaixo:\n1-Consultar os Dados de Um Funcionário.\n2-Consultar Dados dos Gerentes.\n3-Listar Todos os Funcionários.\
                 \n4-Listar Todos os Departamentos.\n5-Listar o Histórico de Funcionários Completo.\n6-Listar o Histórico de Departamentos Completo\
                 \n7-Listar o Histórico de Salários Completo\n8-Voltar.\n");
         scanf("%hu",&opcao);
 
         switch(opcao){
             case 1:
-                getMatricula(mat);
-                opcao = consultaFuncionario(ff,fd,mat);
-                break;
+                if(arquivoVazio(ff) == 0){
+                    printf("\nNão há funcionários cadastrados no momento.\n");
+                    opcao = -1;
+                    break;
+                }
+                else{
+                    getMatricula(mat);
+                    opcao = consultaFuncionario(ff,fd,mat);
+                    break;
+                }
 
             case 2:
                 opcao = dadosDosGerentes(ff,fd);
@@ -218,7 +223,6 @@ int telaListagens(FILE *ff, FILE *fd, FILE *fhs, FILE *fhd, FILE *fhf){
 
             case 3:
                 opcao = l_Funcionarios(ff);
-               // limpaTela();
                 break;
 
             case 4:
